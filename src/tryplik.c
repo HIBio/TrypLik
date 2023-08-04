@@ -22,7 +22,7 @@
 
  */
 
-#define R_NO_REMAP
+//#define R_NO_REMAP
 #include <R.h>
 #include <Rinternals.h>
 #include <stdio.h>
@@ -292,12 +292,12 @@ GenoPriors[0][2] = 0.025;
       int ncols = 4;
 
         SEXP col1, col2, col3, col4, df;
-        PROTECT(df = Rf_allocVector(VECSXP, ncols));
+        PROTECT(df = allocVector(VECSXP, ncols));
 
-        PROTECT(col1 = Rf_allocVector(INTSXP, nrows));
-        PROTECT(col2 = Rf_allocVector(INTSXP, nrows));
-        PROTECT(col3 = Rf_allocVector(INTSXP, nrows));
-        PROTECT(col4 = Rf_allocVector(REALSXP, nrows));
+        PROTECT(col1 = allocVector(INTSXP, nrows));
+        PROTECT(col2 = allocVector(INTSXP, nrows));
+        PROTECT(col3 = allocVector(INTSXP, nrows));
+        PROTECT(col4 = allocVector(REALSXP, nrows));
 
         int j = 0;
         for (a=0; a<7; ++a)
@@ -320,26 +320,26 @@ GenoPriors[0][2] = 0.025;
         SET_VECTOR_ELT(df, 3, col4);
 
         SEXP colNames;
-        PROTECT(colNames = Rf_allocVector(STRSXP, ncols));
-        SET_STRING_ELT(colNames, 0, Rf_mkChar("Alpha_count"));
-        SET_STRING_ELT(colNames, 1, Rf_mkChar("Beta_count"));
-        SET_STRING_ELT(colNames, 2, Rf_mkChar("Beta_FS_count"));
-        SET_STRING_ELT(colNames, 3, Rf_mkChar("Posterior_likelihood"));
-        Rf_setAttrib(df, R_NamesSymbol, colNames);
+        PROTECT(colNames = allocVector(STRSXP, ncols));
+        SET_STRING_ELT(colNames, 0, mkChar("Alpha_count"));
+        SET_STRING_ELT(colNames, 1, mkChar("Beta_count"));
+        SET_STRING_ELT(colNames, 2, mkChar("Beta_FS_count"));
+        SET_STRING_ELT(colNames, 3, mkChar("Posterior_likelihood"));
+        setAttrib(df, R_NamesSymbol, colNames);
 
         SEXP rowNames;
-        PROTECT(rowNames = Rf_allocVector(STRSXP, nrows));
+        PROTECT(rowNames = allocVector(STRSXP, nrows));
         for (int i = 0; i < nrows; ++i) {
           char rowName[10];
           snprintf(rowName, sizeof(rowName), "%d", i + 1);
-          SET_STRING_ELT(rowNames, i, Rf_mkChar(rowName));
+          SET_STRING_ELT(rowNames, i, mkChar(rowName));
         }
-        Rf_setAttrib(df, R_RowNamesSymbol, rowNames);
+        setAttrib(df, R_RowNamesSymbol, rowNames);
 
         SEXP className;
-        PROTECT(className = Rf_allocVector(STRSXP, 1));
-        SET_STRING_ELT(className, 0, Rf_mkChar("data.frame"));
-        Rf_classgets(df, className);
+        PROTECT(className = allocVector(STRSXP, 1));
+        SET_STRING_ELT(className, 0, mkChar("data.frame"));
+        classgets(df, className);
 
         UNPROTECT(8);
         return df;
