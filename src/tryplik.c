@@ -242,51 +242,51 @@ for (a=2; a<9; ++a)
       }
 }
 
-int main (int argc, char *argv[])
-{
-  int WT, FS, Areads, Breads, Dreads;
-  int POP;
-  int a, b, c;
-  long double ***FinalLiks, TotalLik = 0.;
-
-  if (argc == 1) {
-    printf("Usage: TrypLik WT FS Areads Breads Dreads (-pop POP)\n");
-    exit(1);
-  }
-
-  WT = atoi (argv[1]);
-  FS = atoi (argv[2]);
-  Areads = atoi (argv[3]);
-  Breads = atoi (argv[4]);
-  Dreads = atoi (argv[5]);
-  POP = 0;
-  if (argc>6 && strcmp(argv[6], "-pop")==0) {
-    if (strcmp (argv[7], "AFR") == 0)
-      POP = 1;
-    else if (strcmp (argv[7], "EAS") == 0)
-      POP = 2;
-  }
-
-  FinalLiks = (long double ***) malloc (7 * sizeof (long double **));
-  for (a=0; a<7; ++a) {
-    FinalLiks[a] = (long double **) malloc (9 * sizeof (long double *));
-    for (b=1; b<9; ++b) {
-      FinalLiks[a][b] = (long double *) malloc (b * sizeof (long double));
-      for (c=0; c<b; ++c)
-        FinalLiks[a][b][c] = 0.;
-    }
-  }
-
-  do_tryptase_calc(WT, FS, Areads, Breads, Dreads, POP, &FinalLiks, &TotalLik);
-
-  printf("Alpha count\tBeta count\tBeta FS count\tPosterior likelihood\n");
-  for (a=0; a<7; ++a)
-    for (b=1; b<9; ++b)
-      for (c=0; c<b; ++c)
-	if (FinalLiks[a][b][c] / TotalLik > 0.000005)
-	  printf("%d\t\t%d\t\t%d\t\t%.5Lf\n", a, b, c,
-		 FinalLiks[a][b][c] / TotalLik);
-}
+// int main (int argc, char *argv[])
+// {
+//   int WT, FS, Areads, Breads, Dreads;
+//   int POP;
+//   int a, b, c;
+//   long double ***FinalLiks, TotalLik = 0.;
+//
+//   if (argc == 1) {
+//     printf("Usage: TrypLik WT FS Areads Breads Dreads (-pop POP)\n");
+//     exit(1);
+//   }
+//
+//   WT = atoi (argv[1]);
+//   FS = atoi (argv[2]);
+//   Areads = atoi (argv[3]);
+//   Breads = atoi (argv[4]);
+//   Dreads = atoi (argv[5]);
+//   POP = 0;
+//   if (argc>6 && strcmp(argv[6], "-pop")==0) {
+//     if (strcmp (argv[7], "AFR") == 0)
+//       POP = 1;
+//     else if (strcmp (argv[7], "EAS") == 0)
+//       POP = 2;
+//   }
+//
+//   FinalLiks = (long double ***) malloc (7 * sizeof (long double **));
+//   for (a=0; a<7; ++a) {
+//     FinalLiks[a] = (long double **) malloc (9 * sizeof (long double *));
+//     for (b=1; b<9; ++b) {
+//       FinalLiks[a][b] = (long double *) malloc (b * sizeof (long double));
+//       for (c=0; c<b; ++c)
+//         FinalLiks[a][b][c] = 0.;
+//     }
+//   }
+//
+//   do_tryptase_calc(WT, FS, Areads, Breads, Dreads, POP, &FinalLiks, &TotalLik);
+//
+//   printf("Alpha count\tBeta count\tBeta FS count\tPosterior likelihood\n");
+//   for (a=0; a<7; ++a)
+//     for (b=1; b<9; ++b)
+//       for (c=0; c<b; ++c)
+// 	if (FinalLiks[a][b][c] / TotalLik > 0.000005)
+// 	  printf("%d\t\t%d\t\t%d\t\t%.5Lf\n", a, b, c,
+// 		 FinalLiks[a][b][c] / TotalLik);
+// }
 
 double fact (int a)
 {
@@ -304,6 +304,7 @@ double fact (int a)
 /* Compatibility with R */
 #include <R.h>
 #include <Rinternals.h>
+#include <Rdefines.h>
 
 SEXP C_tryplik (SEXP wt, SEXP fs, SEXP areads, SEXP breads, SEXP dreads, SEXP pop) {
 

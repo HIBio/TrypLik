@@ -2,10 +2,26 @@
 % Please edit documentation in R/TrypLik.R
 \name{TrypLik}
 \alias{TrypLik}
-\title{TrypLik}
+\title{Calculate Tryptase Variant Likelihoods}
 \usage{
 TrypLik(wt, fs, areads, breads, dreads, pop = 0)
 }
+\arguments{
+\item{wt}{wildtype}
+
+\item{fs}{frameshift}
+
+\item{areads}{alpha counts}
+
+\item{breads}{beta counts}
+
+\item{dreads}{delta counts}
+
+\item{pop}{population to use (1=, 2=)}
+}
+\value{
+a \code{data.frame}
+}
 \description{
-TrypLik
+Calculate Tryptase Variant Likelihoods
 }

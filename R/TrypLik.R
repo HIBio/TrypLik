@@ -1,4 +1,13 @@
-#' TrypLik
+#' Calculate Tryptase Variant Likelihoods
+#'
+#' @param wt wildtype
+#' @param fs frameshift
+#' @param areads alpha counts
+#' @param breads beta counts
+#' @param dreads delta counts
+#' @param pop population to use (1=, 2=)
+#'
+#' @return a `data.frame`
 #'
 #' @export
 TrypLik <- function(wt, fs, areads, breads, dreads, pop = 0) {

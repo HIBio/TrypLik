@@ -2,8 +2,8 @@
 % Please edit documentation in R/TrypLik-package.R
 \docType{package}
 \name{TrypLik-package}
-\alias{TrypLik}
 \alias{TrypLik-package}
+\alias{_PACKAGE}
 \title{TrypLik: Calculates Tryptase Variant Likelihoods}
 \description{
 Calculates tryptase variant likelihoods based on counts.
