@@ -1,4 +1,6 @@
-/* TrypLik.c - Calculates likelihoods of tryptase copy numbers (alpha,
+/*
+
+ TrypLik.c - Calculates likelihoods of tryptase copy numbers (alpha,
  active beta, beta frameshift) using tryptase read count information. Usage:
 
  TrypLik WT FS Areads Breads Dreads (-pop POP)
@@ -20,11 +22,8 @@
 
  cc -O -o TrypLik TrypLik.c -lm
 
- */
+*/
 
-//#define R_NO_REMAP
-#include <R.h>
-#include <Rinternals.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -39,36 +38,13 @@
 #define expA 1.059
 #define expB 1.027
 
-SEXP C_tryplik (SEXP wt, SEXP fs, SEXP areads, SEXP breads, SEXP dreads, SEXP pop) {
+void do_tryptase_calc (int WT, int FS, int Areads, int Breads, int Dreads, int POP, long double ****FinalLiks, long double * TotalLik)
+{
 
-  int WT, FS, Areads, Breads, Dreads, POP;
   int Aeffective, Beffective, Deffective;
   int a, b, c;
-  int nrows = 0;
-  long double **GenoPriors, **GenoLiks, **FSLiks, ***FinalLiks, TotalLik = 0.;
+  long double **GenoPriors, **GenoLiks, **FSLiks;
   double fact(int), FSfreq;
-
-  // if (argc == 1) {
-  //   printf("Usage: TrypLik WT FS Areads Breads Dreads (-pop POP)\n");
-  //   exit(0);
-  // }
-  // WT = atoi (argv[1]);
-  // FS = atoi (argv[2]);
-  // Areads = atoi (argv[3]);
-  // Breads = atoi (argv[4]);
-  // Dreads = atoi (argv[5]);
-  WT = INTEGER(wt)[0];
-  FS = INTEGER(fs)[0];
-  Areads = INTEGER(areads)[0];
-  Breads = INTEGER(breads)[0];
-  Dreads = INTEGER(dreads)[0];
-  POP = INTEGER(pop)[0];
-  // if (argc>6 && strcmp(argv[6], "-pop")==0) {
-  //   if (strcmp (argv[7], "AFR") == 0)
-  //     POP = 1;
-  //   else if (strcmp (argv[7], "EAS") == 0)
-  //     POP = 2;
-  // }
 
   if (POP==1) /* Set prior FS allele frequency among beta alleles */
     FSfreq = 0.0436;
@@ -98,15 +74,6 @@ SEXP C_tryplik (SEXP wt, SEXP fs, SEXP areads, SEXP breads, SEXP dreads, SEXP po
     FSLiks[a] = (long double *) malloc (9 * sizeof (long double));
     for (b=0; b<9; ++b)
       FSLiks[a][b] = 0.;
-  }
-  FinalLiks = (long double ***) malloc (7 * sizeof (long double **));
-  for (a=0; a<7; ++a) {
-    FinalLiks[a] = (long double **) malloc (9 * sizeof (long double *));
-    for (b=1; b<9; ++b) {
-      FinalLiks[a][b] = (long double *) malloc (b * sizeof (long double));
-      for (c=0; c<b; ++c)
-        FinalLiks[a][b][c] = 0.;
-    }
   }
 
   if (POP==0) { /* Sets genotype priors for EUR ancestry populations */
@@ -154,7 +121,7 @@ SEXP C_tryplik (SEXP wt, SEXP fs, SEXP areads, SEXP breads, SEXP dreads, SEXP po
     GenoPriors[6][4] = 0.000001;
   }
   else if (POP==1) { /* Sets genotype priors for AFR ancestry populations */
-GenoPriors[0][2] = 0.001;
+    GenoPriors[0][2] = 0.001;
     GenoPriors[0][3] = 0.015;
     GenoPriors[0][4] = 0.274;
     GenoPriors[0][5] = 0.1;
@@ -248,108 +215,78 @@ GenoPriors[0][2] = 0.025;
         pow ((b*expB)/(b*expB+2.), (double) Beffective) *
         pow (2./(b*expB+2.), (double) Deffective);
   else if ((4*Areads) >= Dreads) /* Genotype likelihoods when A/D>=0.5 */
-    for (a=1; a<7; ++a)
-      for (b=1; b<9; ++b)
-        GenoLiks[a][b] = FACTOR * GenoPriors[a][b] *
-          pow ((a*expA)/(a*expA+b*expB+2.), (double) Aeffective) *
-          pow ((b*expB)/(a*expA+b*expB+2.), (double) Beffective) *
-          pow (2./(a*expA+b*expB+2.), (double) Deffective);
+      for (a=1; a<7; ++a)
+        for (b=1; b<9; ++b)
+          GenoLiks[a][b] = FACTOR * GenoPriors[a][b] *
+            pow ((a*expA)/(a*expA+b*expB+2.), (double) Aeffective) *
+            pow ((b*expB)/(a*expA+b*expB+2.), (double) Beffective) *
+            pow (2./(a*expA+b*expB+2.), (double) Deffective);
 
   FSLiks[1][0] = 1.;
   if (FS<=2) /* Frameshift likelihoods when #BetaFS=0 */
-    for (a=2; a<9; ++a)
-      FSLiks[a][0] = 1.;
+for (a=2; a<9; ++a)
+  FSLiks[a][0] = 1.;
   else /* Frameshift likelihoods when #BetaFS>0 */
-    for (a=2; a<9; ++a)
-      for (b=1; b<a; ++b)
-        FSLiks[a][b] = (fact (a) / (fact (b) * fact (a-b))) *
-          pow (FSfreq, (double) b) * pow ((1. - FSfreq), (double) a-b) *
-          pow ((double) b/a, (double) FS) *
-          pow ((double) (a-b)/a, (double) WT);
+for (a=2; a<9; ++a)
+  for (b=1; b<a; ++b)
+    FSLiks[a][b] = (fact (a) / (fact (b) * fact (a-b))) *
+      pow (FSfreq, (double) b) * pow ((1. - FSfreq), (double) a-b) *
+      pow ((double) b/a, (double) FS) *
+      pow ((double) (a-b)/a, (double) WT);
 
   for (a=0; a<7; ++a)
     for (b=1; b<9; ++b)
       for (c=0; c<b; ++c) {
-        FinalLiks[a][b][c] = GenoLiks[a][b] * FSLiks[b][c];
-        TotalLik += FinalLiks[a][b][c];
+        (*FinalLiks)[a][b][c] = GenoLiks[a][b] * FSLiks[b][c];
+        (*TotalLik) += (*FinalLiks)[a][b][c];
       }
-      printf("Alpha count\tBeta count\tBeta FS count\tPosterior likelihood\n");
-
-
-
-  for (a=0; a<7; ++a)
-    for (b=1; b<9; ++b)
-      for (c=0; c<b; ++c) {
-        if (FinalLiks[a][b][c] / TotalLik > 0.000005) {
-          printf("%d\t\t%d\t\t%d\t\t%.5Lf\n", a, b, c,
-                 FinalLiks[a][b][c] / TotalLik);
-          nrows += 1;
-        }
-      }
-
-      /* output a data.frame */
-      //int nrows = 3;
-      int ncols = 4;
-
-        SEXP col1, col2, col3, col4, df;
-        PROTECT(df = allocVector(VECSXP, ncols));
-
-        PROTECT(col1 = allocVector(INTSXP, nrows));
-        PROTECT(col2 = allocVector(INTSXP, nrows));
-        PROTECT(col3 = allocVector(INTSXP, nrows));
-        PROTECT(col4 = allocVector(REALSXP, nrows));
-
-        int j = 0;
-        for (a=0; a<7; ++a)
-          for (b=1; b<9; ++b)
-            for (c=0; c<b; ++c) {
-              if (FinalLiks[a][b][c] / TotalLik > 0.000005) {
-                INTEGER(col1)[j] = a;
-                INTEGER(col2)[j] = b;
-                INTEGER(col3)[j] = c;
-                char formatted[20];
-                snprintf(formatted, sizeof(formatted), "%.*f", 5, (double) (FinalLiks[a][b][c] / TotalLik));
-                REAL(col4)[j] = atof(formatted);
-                j += 1;
-              }
-            }
-
-        SET_VECTOR_ELT(df, 0, col1);
-        SET_VECTOR_ELT(df, 1, col2);
-        SET_VECTOR_ELT(df, 2, col3);
-        SET_VECTOR_ELT(df, 3, col4);
-
-        SEXP colNames;
-        PROTECT(colNames = allocVector(STRSXP, ncols));
-        SET_STRING_ELT(colNames, 0, mkChar("Alpha_count"));
-        SET_STRING_ELT(colNames, 1, mkChar("Beta_count"));
-        SET_STRING_ELT(colNames, 2, mkChar("Beta_FS_count"));
-        SET_STRING_ELT(colNames, 3, mkChar("Posterior_likelihood"));
-        setAttrib(df, R_NamesSymbol, colNames);
-
-        SEXP rowNames;
-        PROTECT(rowNames = allocVector(STRSXP, nrows));
-        for (int i = 0; i < nrows; ++i) {
-          char rowName[10];
-          snprintf(rowName, sizeof(rowName), "%d", i + 1);
-          SET_STRING_ELT(rowNames, i, mkChar(rowName));
-        }
-        setAttrib(df, R_RowNamesSymbol, rowNames);
-
-        SEXP className;
-        PROTECT(className = allocVector(STRSXP, 1));
-        SET_STRING_ELT(className, 0, mkChar("data.frame"));
-        classgets(df, className);
-
-        UNPROTECT(8);
-        return df;
 }
 
-// int main (int argc, char *argv[])
-// {
-//   C_tryplik(atoi (argv[1]), atoi (argv[2]), atoi (argv[3]), atoi (argv[4]), atoi (argv[5]), atoi (argv[6]));
-//   return(0);
-// }
+int main (int argc, char *argv[])
+{
+  int WT, FS, Areads, Breads, Dreads;
+  int POP;
+  int a, b, c;
+  long double ***FinalLiks, TotalLik = 0.;
+
+  if (argc == 1) {
+    printf("Usage: TrypLik WT FS Areads Breads Dreads (-pop POP)\n");
+    exit(1);
+  }
+
+  WT = atoi (argv[1]);
+  FS = atoi (argv[2]);
+  Areads = atoi (argv[3]);
+  Breads = atoi (argv[4]);
+  Dreads = atoi (argv[5]);
+  POP = 0;
+  if (argc>6 && strcmp(argv[6], "-pop")==0) {
+    if (strcmp (argv[7], "AFR") == 0)
+      POP = 1;
+    else if (strcmp (argv[7], "EAS") == 0)
+      POP = 2;
+  }
+
+  FinalLiks = (long double ***) malloc (7 * sizeof (long double **));
+  for (a=0; a<7; ++a) {
+    FinalLiks[a] = (long double **) malloc (9 * sizeof (long double *));
+    for (b=1; b<9; ++b) {
+      FinalLiks[a][b] = (long double *) malloc (b * sizeof (long double));
+      for (c=0; c<b; ++c)
+        FinalLiks[a][b][c] = 0.;
+    }
+  }
+
+  do_tryptase_calc(WT, FS, Areads, Breads, Dreads, POP, &FinalLiks, &TotalLik);
+
+  printf("Alpha count\tBeta count\tBeta FS count\tPosterior likelihood\n");
+  for (a=0; a<7; ++a)
+    for (b=1; b<9; ++b)
+      for (c=0; c<b; ++c)
+	if (FinalLiks[a][b][c] / TotalLik > 0.000005)
+	  printf("%d\t\t%d\t\t%d\t\t%.5Lf\n", a, b, c,
+		 FinalLiks[a][b][c] / TotalLik);
+}
 
 double fact (int a)
 {
@@ -362,4 +299,92 @@ double fact (int a)
     for (c=2; c<=a; ++c)
       b *= (double) c;
   return (b);
+}
+
+/* Compatibility with R */
+#include <R.h>
+#include <Rinternals.h>
+
+SEXP C_tryplik (SEXP wt, SEXP fs, SEXP areads, SEXP breads, SEXP dreads, SEXP pop) {
+
+  int a, b, c;
+  int nrows = 0;
+  long double ***FinalLiks, TotalLik = 0.;
+
+  FinalLiks = (long double ***) malloc (7 * sizeof (long double **));
+  for (a=0; a<7; ++a) {
+    FinalLiks[a] = (long double **) malloc (9 * sizeof (long double *));
+    for (b=1; b<9; ++b) {
+      FinalLiks[a][b] = (long double *) malloc (b * sizeof (long double));
+      for (c=0; c<b; ++c)
+        FinalLiks[a][b][c] = 0.;
+    }
+  }
+
+  do_tryptase_calc(* INTEGER(wt), * INTEGER(fs), * INTEGER(areads), * INTEGER(breads), * INTEGER(dreads), * INTEGER(pop), &FinalLiks, &TotalLik);
+
+  /* count rows */
+  for (a=0; a<7; ++a)
+    for (b=1; b<9; ++b)
+      for (c=0; c<b; ++c) {
+        if (FinalLiks[a][b][c] / TotalLik > 0.000005) {
+          nrows += 1;
+        }
+      }
+
+  /* output a data.frame */
+  int ncols = 4;
+
+  SEXP col1, col2, col3, col4, df;
+  PROTECT(df = allocVector(VECSXP, ncols));
+
+  PROTECT(col1 = allocVector(INTSXP, nrows));
+  PROTECT(col2 = allocVector(INTSXP, nrows));
+  PROTECT(col3 = allocVector(INTSXP, nrows));
+  PROTECT(col4 = allocVector(REALSXP, nrows));
+
+  int j = 0;
+  for (a=0; a<7; ++a)
+    for (b=1; b<9; ++b)
+      for (c=0; c<b; ++c) {
+        if (FinalLiks[a][b][c] / TotalLik > 0.000005) {
+          INTEGER(col1)[j] = a;
+          INTEGER(col2)[j] = b;
+          INTEGER(col3)[j] = c;
+          char formatted[20];
+          snprintf(formatted, sizeof(formatted), "%.*f", 5, (double) (FinalLiks[a][b][c] / TotalLik));
+          REAL(col4)[j] = atof(formatted);
+          j += 1;
+        }
+      }
+
+  SET_VECTOR_ELT(df, 0, col1);
+  SET_VECTOR_ELT(df, 1, col2);
+  SET_VECTOR_ELT(df, 2, col3);
+  SET_VECTOR_ELT(df, 3, col4);
+
+  SEXP colNames;
+  PROTECT(colNames = allocVector(STRSXP, ncols));
+  SET_STRING_ELT(colNames, 0, mkChar("Alpha_count"));
+  SET_STRING_ELT(colNames, 1, mkChar("Beta_count"));
+  SET_STRING_ELT(colNames, 2, mkChar("Beta_FS_count"));
+  SET_STRING_ELT(colNames, 3, mkChar("Posterior_likelihood"));
+  setAttrib(df, R_NamesSymbol, colNames);
+
+  SEXP rowNames;
+  PROTECT(rowNames = allocVector(STRSXP, nrows));
+  for (int i = 0; i < nrows; ++i) {
+    char rowName[10];
+    snprintf(rowName, sizeof(rowName), "%d", i + 1);
+    SET_STRING_ELT(rowNames, i, mkChar(rowName));
+  }
+  setAttrib(df, R_RowNamesSymbol, rowNames);
+
+  SEXP className;
+  PROTECT(className = allocVector(STRSXP, 1));
+  SET_STRING_ELT(className, 0, mkChar("data.frame"));
+  classgets(df, className);
+
+  UNPROTECT(8);
+  return df;
 }
