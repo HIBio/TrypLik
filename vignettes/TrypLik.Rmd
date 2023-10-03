@@ -1,0 +1,587 @@
+---
+title: "Estimating Tryptase Copy Numbers from Sequence Data"
+author: 
+  - name: Your name
+    affiliation:
+    - Your institution
+    email: your.email@somewhere.com
+output: 
+  BiocStyle::html_document:
+    self_contained: yes
+    toc: true
+    toc_float: true
+    toc_depth: 2
+    code_folding: show
+date: "`r doc_date()`"
+package: "`r pkg_ver('TrypLik')`"
+vignette: >
+  %\VignetteIndexEntry{TrypLik}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}  
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>",
+    crop = NULL ## Related to https://stat.ethz.ch/pipermail/bioc-devel/2020-April/016656.html
+)
+```
+
+
+```{r vignetteSetup, echo=FALSE, message=FALSE, warning = FALSE}
+## Track time spent on making the vignette
+startTime <- Sys.time()
+
+## Bib setup
+library("RefManageR")
+
+## Write bibliography information
+bib <- c(
+    R = citation(),
+    BiocStyle = citation("BiocStyle")[1],
+    knitr = citation("knitr")[1],
+    RefManageR = citation("RefManageR")[1],
+    rmarkdown = citation("rmarkdown")[1],
+    sessioninfo = citation("sessioninfo")[1],
+    testthat = citation("testthat")[1],
+    TrypLik = citation("TrypLik")[1]
+)
+```
+
+# Basics
+
+## Install `TrypLik`
+
+`R` is an open-source statistical environment which can be easily modified to enhance its functionality via packages. `r Biocpkg("TrypLik")` is a `R` package available via the [Bioconductor](http://bioconductor.org) repository for packages. `R` can be installed on any operating system from [CRAN](https://cran.r-project.org/) after which you can install `r Biocpkg("TrypLik")` by using the following commands in your `R` session:
+
+```{r "install", eval = FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+      install.packages("BiocManager")
+  }
+
+BiocManager::install("TrypLik")
+
+## Check that you have a valid Bioconductor installation
+BiocManager::valid()
+```
+
+## Required knowledge
+
+`r Biocpkg("TrypLik")` is based on many other packages and in particular in those that have implemented the infrastructure needed for dealing with RNA-seq data (EDIT!). That is, packages like `r Biocpkg("SummarizedExperiment")` (EDIT!).
+
+If you are asking yourself the question "Where do I start using Bioconductor?" you might be interested in [this blog post](http://lcolladotor.github.io/2014/10/16/startbioc/#.VkOKbq6rRuU).
+
+## Asking for help
+
+As package developers, we try to explain clearly how to use our packages and in which order to use the functions. But `R` and `Bioconductor` have a steep learning curve so it is critical to learn where to ask for help. The blog post quoted above mentions some but we would like to highlight the [Bioconductor support site](https://support.bioconductor.org/) as the main resource for getting help: remember to use the `TrypLik` tag and check [the older posts](https://support.bioconductor.org/tag/TrypLik/). Other alternatives are available such as creating GitHub issues and tweeting. However, please note that if you want to receive help you should adhere to the [posting guidelines](http://www.bioconductor.org/help/support/posting-guide/). It is particularly critical that you provide a small reproducible example and your session information so package developers can track down the source of the error.
+
+## Citing `TrypLik`
+
+We hope that `r Biocpkg("TrypLik")` will be useful for your research. Please use the following information to cite the package and the overall approach. Thank you!
+
+```{r "citation"}
+## Citation info
+citation("TrypLik")
+```
+
+# Quick start to using `TrypLik`
+
+```{r "start", message=FALSE}
+library("TrypLik")
+```
+
+Edit this as you see fit =)
+
+Here is an example of you can cite your package inside the vignette:
+
+* `r Biocpkg("TrypLik")` `r Citep(bib[["TrypLik"]])`
+
+
+
+# Reproducibility
+
+The `r Biocpkg("TrypLik")` package `r Citep(bib[["TrypLik"]])` was made possible thanks to:
+
+* R `r Citep(bib[["R"]])`
+* `r Biocpkg("BiocStyle")` `r Citep(bib[["BiocStyle"]])`
+* `r CRANpkg("knitr")` `r Citep(bib[["knitr"]])`
+* `r CRANpkg("RefManageR")` `r Citep(bib[["RefManageR"]])`
+* `r CRANpkg("rmarkdown")` `r Citep(bib[["rmarkdown"]])`
+* `r CRANpkg("sessioninfo")` `r Citep(bib[["sessioninfo"]])`
+* `r CRANpkg("testthat")` `r Citep(bib[["testthat"]])`
+
+This package was developed using `r BiocStyle::Biocpkg("biocthis")`.
+
+
+Code for creating the vignette
+
+```{r createVignette, eval=FALSE}
+## Create the vignette
+library("rmarkdown")
+system.time(render("TrypLik.Rmd", "BiocStyle::html_document"))
+
+## Extract the R code
+library("knitr")
+knit("TrypLik.Rmd", tangle = TRUE)
+```
+
+```{css, echo=FALSE}
+.bgr {
+  background-color: red;
+  padding: 0;
+}
+.bgy {
+  background-color: yellow;
+  padding: 0;
+}
+.lefttable table {
+  margin-left: 50px;
+  max-width: 600px;
+  <!-- width: 100%; -->
+}
+```
+
+# Overview 
+
+We have developed a likelihood-based approach for estimating tryptase copy
+numbers (specifically the numbers of $\alpha$ alleles alleles and $\beta$ frameshift
+alleles) directly from whole-genome (preferable) or whole-exome sequence data.
+The approach utilizes an updated assembly of canonical $\alpha$, $\beta$, and $\delta$ tryptase
+alleles, and identifies reads that map uniquely to only one of these alleles.
+The complete workflow is implemented in the package XXX.
+
+Background
+
+The tryptase gene cluster contains four closely spaced paralogous genes on
+chromosome 16p13.3. These include TPSAB1 and TPSB2, which together encode the
+$\alpha$ and $\beta$ tryptase peptides. TPSAB1 encodes two major alleles,
+$\alpha$ and $\beta$I, while TPSB2’s major alleles are $\beta$II and $\beta$III.
+$\alpha$ and $\beta$I are ~1% diverged over a 1.2 Kbp region, while $\beta$I and
+$\beta$II differ by just a single nucleotide over the same region. $\alpha$
+alleles are thought to be enzymatically inactive, and while most $\beta$ alleles
+are active, there is a specific $\beta$ frameshift variant ($\beta$III$^{FS}$) that
+is inactive.
+
+Recent work has identified a familial inherited syndrome, hereditary alpha
+tryptasemia (H$\alpha$T), which is associated with one or more duplications of
+the $\alpha$ allele in TPSAB1 (Lyons et al. 2016). Common phenotypes found in
+H$\alpha$T patients include systemic venom reactions, pruritis, IBS, reflux,
+skeletal abnormalities, retained primary dentition and anthralgia. There is
+also evidence for $\beta$ duplications and deletions (Chollet et al. 2021,
+Glover et al. 2022), though it is not yet clear if this reflects copy number
+variants (CNVs) in only TPSAB1 or CNVs in both TPSAB1 and TPSAB2. Nothing is
+known about the clinical effects of tryptase $\beta$ copy number variation.
+	
+While $\alpha$, $\beta$, and $\beta$III$^{FS}$ copy numbers can be accurately
+determined using custom droplet digital PCR (ddPCR) assays (cf. Lyons et al.
+2016), it is much more challenging to estimate copy numbers from standard
+short-read (e.g., Illumina) sequence data, even with a high depth of coverage.
+This is primarily due to the fact that $\alpha$, $\beta$, and $\beta$III$^{FS}$
+tryptase alleles are so similar, but exacerbated by errors in the human
+reference genome assembly (hg38), which appears to have chimeric alleles for
+both TPSAB1 and TPSB2. In addition, the published allelic sequences in Maun et
+al. (2019) also appear to be incorrect. This has motivated our efforts to
+generate our own consensus assemblies of different tryptase alleles (see below).
+
+# Instructions on use
+
+There are two main parts to the workflow: First, we map reads to a tryptase
+consensus sequence and count the ones that map uniquely to tryptase $\alpha$,
+$\beta$, $\beta$III$^{FS}$ and $\delta$ alleles. Second, we perform Bayesian
+likelihood calculations to estimate the most likely copy number count. We
+describe each step in greater detail below.
+
+## Tryptase read mapping
+
+This part of the workflow can be broken up into the following components:
+
+1. Subset an indexed bam file to consider only reads mapping to the tryptase region
+1. Convert the output back to (the original) paired-end fastq reads
+1. Map raw reads to consensus tryptase sequence
+1. Remove duplicates
+1. Count the numbers of reads containing specific 30 bp motifs that map specifically to a single tryptase allele 
+
+There are different ways to go about each of these steps:
+
+### Indexing bam files
+
+If a datafile is not already indexed, we recommend using samtools to do so. For
+example, we use publicly available high-coverage whole genome sequence data from
+the 1000 Genomes Project as a test case. We downloaded the file
+"HG00100.final.cram" from
+https://www.internationalgenome.org/data-portal/sample/HG00100 to use as an
+example. Subsetting and indexing can be performed with the following commands:
+
+```bash
+samtools view -b -o HG00100.final.bam HG00100.final.cram
+samtools index HG00100.final.bam
+samtools view HG00100.final.bam chr16:1200000-1300000 -b -h > HG00100.tryptase.bam
+```
+
+### Converting indexed bam files to fastq reads
+
+One possibility for doing this uses samtools again:
+
+```bash
+samtools sort -n HG00100.tryptase.bam -o HG00100.tryptase.sorted.bam
+samtools fastq -1 HG00100.tryptase.R1.fastq -2 HG00100.tryptase.R2.fastq -0 /dev/null -s /dev/null -n HG00100.tryptase.sorted.bam
+```
+
+###Mapping reads to tryptase consensus sequence 
+
+Here, we are using the tryptase consensus sequence published by Maun et al.
+(2019) to winnow out reads that are in the tryptase region that do not actually
+map to tryptase genes. The following command works for our continuing example:
+
+```bash
+bwa mem consensus.fa HG00100.tryptase.R1.fastq HG00100.tryptase.R2.fastq > out.sam
+```
+
+### Removing duplicates
+
+This is generally done using Picard or samtools. Here is an example of doing so
+using samtools, with the output written to the file "temp.sam".
+
+```bash
+samtools sort -n out.sam -o out.sorted.sam
+samtools fixmate -m out.sorted.sam fixmate.sam
+samtools sort -o positionsort.sam fixmate.sam
+samtools markdup -r positionsort.sam temp.sam
+```
+
+### Counting reads mapping to specific tryptase alleles
+
+The file "in_tryptasenew2" is a shell script that counts the numbers of reads
+that map specifically to different tryptase alleles (see below for technical
+details). It requires the input file to be called "temp.sam". Output consists
+of 9 integers summarizing read counts:
+
+*	The first four of these are the numbers of reads mapping uniquely to $\alpha$, $\beta$I, $\beta$II or $\beta$III alleles in the specific 83 bp region where all four alleles can be distinguished from each other. 
+*	The next two are the numbers of reads that map uniquely to $\beta$ ‘wildtype’ (i.e., not frameshifted) and $\beta$ frameshifted sequences
+*	The final three are the numbers of reads that can be uniquely mapped to $\alpha$, $\beta$, or $\delta$ alleles respectively
+
+Further details on these can be found in the technical details below. For our example with sample HG00100 from the 1000 Genomes Project, the output of "in_tryptasenew2" is
+
+```
+29	0	25	0	27	0	382	356	357
+```
+
+## Tryptase copy number likelihood calculations 
+
+The last five numbers from the output of "in_tryptasenew2" are used as input to
+the program TrypLik to estimate the likelihoods of different combinations of
+total # of $\alpha$ alleles, total # of $\beta$ alleles, and total # of $\beta$
+frameshift alleles. The method accounts for dependence across read counts
+(caused by the same 2 x 150 bp read generally overlapping multiple of the
+regions used to distinguish between alleles) and also uses prior information on
+CNV frequencies in different populations. Usage is
+
+```bash
+TrypLik WT FS Areads Breads Dreads (-pop POP)
+```
+
+`WT`: number of reads mapping to $\beta$ "wildtype" alleles at the site of the
+frameshift mutation (5th field from "in_tryptasenew2" output)
+
+`FS`: number of reads mapping to $\beta$ frameshift alleles at the site of the
+frameshift mutation (6th field from "in_tryptasenew2" output)
+
+`Areads`: number of reads mapping uniquely to $\alpha$ alleles relative to
+$\beta$ and $\delta$ alleles (7th field from "in_tryptasenew2" output)
+
+`Breads`: number of reads mapping uniquely to $\beta$ alleles relative to
+$\alpha$ and $\delta$ alleles (8th field from "in_tryptasenew2" output)
+
+`Dreads`: number of reads mapping uniquely to $\delta$ alleles relative to
+$\alpha$ and $\beta$ alleles (9th field from "in_tryptasenew2" output)
+
+`-pop POP`: optional flag to specify the predominant ancestry of the test
+sample. Options include EUR for European ancestry, SAS for South Asian
+ancestry, EAS for East Asian ancestry and AFR for African ancestry. The default,
+if the `-pop` flag is not included, is European ancestry.
+
+Note that these likelihood calculations assume that all individuals contain
+exactly two tryptase $\delta$ alleles. `Dreads` acts as a ‘control’ from which
+we estimate the other copy numbers. The output consists of a list of different
+$\alpha$, $\beta$ and $\beta$ frameshift allele copy numbers followed by the
+combination’s posterior probability. To continue our example from before,
+calculation for HG00100 would use the command
+
+```bash
+TrypLik 27 0 382 356 357 -pop EUR
+```
+
+Output would look like this:
+
+| Alpha count | Beta count | Beta FS count | Posterior likelihood |
+|:------------|:-----------|:--------------|:---------------------|
+|      2      |      2     |       0       |       0.99985        |
+|      2      |      3     |       0       |       0.00002        |
+|      3      |      2     |       0       |       0.00011        |
+|      3      |      3     |       0       |       0.00002        |
+
+The method estimates that HG00100 has a 2$\alpha$:2$\beta$:2$\delta$ genotype
+(with no frameshift alleles) with posterior probability 99.985%.
+
+# Technical details
+
+## de novo assembly/alignment
+
+We started by aligning cDNA sequences to a 40 bp region near the probes used by
+Lyons et al. (2016, Supplementary Figure 3b) for ddPCR.
+
+<div class="lefttable">
+|   |      |
+|---|:-----|
+| Delta	(CCDS10432.1)	| <tt>CCAGGCCAGG CCCTGCAGCA A<mark class="bgr">A</mark>CGGGCAT<mark class="bgr">T</mark> GTTGGGGG<mark class="bgr">G</mark>C</tt> |
+| Alpha	(M30038.1)		| <tt>CCAG<mark class="bgy">T</mark>CCAGG CCCTGCAGCA AG<mark class="bgy">C</mark>GGG<mark class="bgy">T</mark>ATC GT<mark class="bgy">C</mark>GGGGGTC</tt> |
+| Beta1	(M33492.1)	  | <tt>CCAG<mark class="bgy">G</mark>CCAGG CCCTGCAGC<mark class="bgy">G</mark> AG<mark class="bgy">T</mark>GGG<mark class="bgy">C</mark>ATC GT<mark class="bgy">C</mark>GGGGGTC</tt> | 
+| Beta2 (BC065923.1)  | <tt>CCAG<mark class="bgy">G</mark>CCAGG CCCTGCAGC<mark class="bgy">G</mark> AG<mark class="bgy">T</mark>GGG<mark class="bgy">C</mark>ATC GT<mark class="bgy">T</mark>GGGGGTC</tt> |
+| Beta3 (AF099143)		| <tt>CCAG<mark class="bgy">G</mark>CCAGG CCCTG<mark class="bgy">C</mark>AGC<mark class="bgy">G</mark> AG<mark class="bgy">T</mark>GGG<mark class="bgy">C</mark>ATC GT<mark class="bgy">T</mark>GGGGGTC</tt> |
+</div>
+
+Here sites in red are fixed differences between TPSD1 and (TPSAB1+TPSB2), while
+sites in yellow can be used to distinguish $\langle \alpha$, $\beta$I, and
+$\beta$II/$\beta$III alleles from each other. $\beta$II and $\beta$III alleles
+are distinguishable from each other at sites near the Lyons et al. (2016) REV
+primer as follows:
+
+|   |      |
+|---|:-----|
+| Beta2 (BC065923.1) | <tt>GAGAGTCC<mark class="bgy">**A**</mark>C G<mark class="bgy">**G**</mark>CC<mark class="bgy">**C**</mark>ATACT</tt> |
+| Beta3 (AF099143)   | <tt>GAGAGTCC<mark class="bgy">**G**</mark>C G<mark class="bgy">**A**</mark>CC<mark class="bgy">**G**</mark>ATACT</tt> |
+
+We assumed that the sequences listed above are correct and invariant in the
+different tryptase alleles. We then used Illumina short read data to ‘extend’
+allele-specific alignments. Specifically, we combined the raw reads from 30
+randomly chosen individuals of European ancestry from the 1000 Genomes Project
+(high-coverage data generated by the NYGC) and pulled out those reads that
+matched the above sequences. We then could expand on the allele-specific
+assemblies by looking at the alignments just 5’ and 3’ to the sequences shown
+above, and concurrently identify common allele-specific polymorphisms. We
+continued to iteratively extend these assemblies until $\alpha$ and $\beta$
+alleles could not be distinguished from each other. Roughly speaking, since the
+Illumina data consisted of 150 bp reads, this process can continue as long as
+there is a fixed difference between allelic assemblies every ~150 bp. We
+extended these assemblies across ~1.1 Kbp of sequence including most of the
+coding regions (see Appendix 1).
+
+Our alignments show the expected difference between $\alpha$ and $\beta$ alleles
+at the putative functional mutation. In addition, we confirm that the
+frameshift mutation happens only on a $\beta$III background (leading to the
+inactivated $\beta$III$^{FS}$ allele), and that the $\beta$I and $\beta$II consensus
+sequences differ by just a single nucleotide, despite $\beta$I being an allele
+that is (supposed to be) exclusive to TPSAB1 and $\beta$II being confined to
+TPSB2. This likely reflects paralogous gene conversion between tryptase genes
+over evolutionarily recent time scales.
+
+The tryptase allele assemblies generated here differ slightly from all
+previously published assemblies, including some of the cDNA sequences, the Lyons
+et al. (2016) tryptase alignment, the Maun et al. (2019) tryptase alignment, and
+the human reference genome (hg38). We believe though that Illumina reads are
+highly accurate, and can show how these previous assemblies are inconsistent
+with Illumina data from multiple individuals.
+
+# Tryptase CNV genotyping from high-coverage Illumina reads
+
+From the alignment described above, we identified 11 different 30 bp regions
+where reads could be uniquely mapped to $\alpha$, $\beta$, or $\delta$ alleles.
+Using the base numbering defined by Maun et al. (2019, Data S1) and also used in
+the accompanying table, these correspond to the following regions:
+
+```{=latex}
+\begin{array}{ccc}
+560\, – 589	&	1010\, – 1039	&	1360\, – 1389 \\
+740\, – 769	&	1115 \sim 1146	&	1510\, – 1539 \\
+840\, – 869	&	1220\, – 1249 &	1560\, – 1589 \\
+940\, – 969	&	1260\, – 1289 
+\end{array}
+```
+
+Tallying up the total number of ‘$\alpha$ reads’, ‘$\beta$ reads’ and ‘$\delta$
+reads’ (which we call here A, B and D respectively) gives us a way of estimating
+the relative copy numbers of $\alpha$, $\beta$ and $\delta$ alleles. In
+particular, if we assume each individual has exactly two copies of TPSD1 (i.e.,
+no copy number variation in TPSD1), then the number of $\alpha$ and $\beta$
+alleles can be estimated by 2A/D and 2B/D respectively.
+
+Some caveats apply:
+
+1. The regions are not independent of each other, since the 2 x 150bp paired-end
+reads generally include multiple regions. This leads to a greater variance than
+otherwise expected in estimated allele counts.
+
+1. Even in a pool of individuals with the same true number of $\alpha$ and $\beta$
+alleles, the estimates 2A/D and 2B/D will be correlated since they both have the
+same denominator.
+
+1. Unknown (or unaccounted for) polymorphisms within an allelic class can lead to
+misclassified reads. This is perhaps most important in the analysis of
+non-European ancestry individuals.
+
+1. The method assumes that all CNVs affect the entire 1 Kbp test region, though we
+know this isn’t true. Chovanac et al. (2022) report the existence of σ alleles,
+which appear to be a chimera of $\alpha$ and $\beta$ alleles. In our analyses,
+these alleles are estimated as partial $\alpha$ and partial $\beta$,
+proportional to the numbers of reads mapping to each canonical allele assembly.
+
+We suggest using an empirically-based approach for estimating the bias in the
+estimates (e.g., estimating E(2A/D | actual number of $\alpha$ alleles is
+known)) that uses orthogonal information on true allele counts (e.g., validated
+ddPCR data). A preliminary version of this is described below.
+
+# $\beta$III frameshift mutation
+
+The approach described above can estimate the total copy number of tryptase beta
+alleles, but some of these beta alleles are inactive due to a frameshift
+mutation. In parallel, we conduct a read-counting exercise that counts reads
+that uniquely map to the $\beta$III$^{FS}$ allele and reads that map to all other
+$\beta$ alleles:
+
+|   |      |
+|---|:-----|
+| $\beta$III$^{FS}$ |	<tt>CTCAGAGACC TTCCCCCCCG GGGATGCCGT</tt> |
+| All other $\beta$	|	<tt>CTCAGAGACC TTCCCCCC-G GGGATGCCGTG</tt> |
+	
+(Note that both $\alpha$ and σ alleles do not map to either of these sequences.)
+The observed numbers of reads in each of these two categories (called here FS+
+and FS-) is expected to follow a binomial distribution with probabilities
+proportional to the true numbers of $\beta$III$^{FS}$ and non-$\beta$III$^{FS}$
+$\beta$ alleles. Further, by assumption, $\beta$III$^{FS}$ alleles only occur
+in TPSB2. If data = {FS+, FS-}, then under a simple likelihood framework,
+
+$$
+\rm{lik} \bigl(data\bigr) \sim Pr \bigl(genotype\bigr)\ Pr \bigl( data | genotype\bigr)
+$$
+
+Suppose for example we observe $28$ and $36$ reads supporting $\beta$III$^{FS}$
+and
+non-$\beta$III$^{FS}$ $\beta$ alleles respectively (i.e., data = $\{28,
+36\}$) in an individual of European ancestry with an estimated tryptase CNV
+genotype of $0\alpha$:$4\beta$:$2\delta$. Based on the European 1KGP data, the
+frequency of the $\beta$III$^{FS}$ mutation is $\sim0.1766$. So, the naïve
+(i.e., prior or Hardy-Weinberg) probability of a homozygous $\beta$III$^{FS}$
+genotype (i.e., $\beta$III$^{FS}$ mutations on both chromosomes) is $(0.1766)2$
+and the probability of having exactly one copy of $\beta$III$^{FS}$ is
+$2(0.1766)(1-0.1766)$. Assuming the estimated tryptase CNV genotype is correct,
+we calculate
+
+$$
+	Pr (data | $\beta$III$^{FS}$ heterozygote) = \left(\stackrel{64}{28}\right) (0.25)28(0.75)36 and
+	Pr (data | $\beta$III$^{FS}$ homozygote) = (■(64@28)) (0.5)28(0.5)36 
+$$
+
+and 
+
+	lik ($\beta$III$^{FS}$ homozygote) ~ 0.0018922 and lik ($\beta$III$^{FS}$ heterozygote) ~ 0.00014354.  
+
+In a Bayesian context, the posterior Pr ($\beta$III$^{FS}$ homozygote) = 0.9295, and we conclude that the individual is likely to have 0 $\alpha$ alleles, 2 active $\beta$ alleles and 2 inactive $\beta$III$^{FS}$ alleles.
+
+Tryptase CNV genotyping revisited: likelihood framework
+
+In an idealized world where the 4 caveats described above do not apply, each read would be independent and the read counts (A, B, D) could be modeled as following a multinomial distribution conditional on the sum A+B+D, with probabilities for each category proportional to the true copy numbers of $\alpha$ $\beta$and $\delta$ We employ two modifications to this model to account for deviations from model assumptions:
+
+	1)	We replace (A+B+D) by (A+B+D) / R, the "effective number of independent read counts", to account for caveat #1
+	2)	We reweight the multinomial probabilities by factors of E(2A/D | $\alpha$ copy number = 1) and E(2B/D | $\beta$ copy number = 3) / 3 for $\alpha$ and $\beta$ copy numbers to account for unknown structural variants and/or polymorphisms 
+
+We use empirical data from the EUR populations from the 1000 Genomes Project to estimate these correction factors. First, we plotted 2A/D vs. 2B/D for these 503 samples:
+
+
+Figure 1.
+ 
+
+We focus on the dots colored green, which are estimated to have a tryptase genotype of 1$\alpha$:3$\beta$:2$\delta$. The average values of 2A/D and 2B/D are 1.06 and 3.13 respectively, and these means are relatively insensitive to the inclusion/exclusion of specific points on the periphery of the central mass. In addition, we note that
+
+	Var (2A/D) = 0.0263				r2 (2A/D, 2B/D) = 0.1953
+	Var (2B/D) = 0.1286
+
+We then ran simulations with different values of R (but conditional on the observed A, B and D values) to heuristically find a value that, on average, produces correlation and variances similar to what was observed. We settled on R = 2.75, but with the caveat that this estimation process was entirely qualitative. We do note though that this R is approximately equal to the number of 30 bp informative regions covered by an average 2 x 150 bp read pair in the target tryptase region.
+	As an example of the process, suppose the observed data {A, B, D} = {192, 600, 290} and that we want to estimate the probability of observing the data given a true genotype of 1$\alpha$:4$\beta$. Then, 2A/D = 1.324, 2B/D = 4.138, and the ‘effective number of independent reads is (192+600+290)/2.75 ≈ 393. Then, to estimate the probability of the genotype 1$\alpha$:3$\beta$:2$\delta$, for example, we calculate
+
+	
+	Pr (2A/D ≈ 1.324 && 2B/D ≈ 4.138 | true genotype is 1$\alpha$:3$\beta$:2$\delta$) ≈
+Pr (2A/D ≈ 1.324 && 2B/D ≈ 4.138 | 393 independent reads are simulated from a multinomial distribution with relative probabilities of 1.06, 3.13 and 2 for $\alpha$, $\beta$, and $\delta$ reads respectively)
+
+These are actually approximate likelihoods; operationally, 2A/D ≈ 1.324 is the estimated probability that the simulated 2A/D is between (0.99*1.324) and (1.01*1.324).
+To calculate posterior probabilities, we still need a prior estimate of the population-level genotype frequencies. There is some element of circularity here since we ultimately are estimating genotypes (which go in to the population-level genotype frequency estimates). Ideally we would have an independent way of assessing population frequencies (e.g., widespread ddPCR), but in the absence of that we have obtained crude prior estimates (see Table 1 below) by qualitative assessments of figures like Figure 1. Continuing with our example (and assuming European ancestry), we estimate
+
+lik (1$\alpha$:3$\beta$:2$\delta$) ~ Pr (1$\alpha$:3$\beta$:2$\delta$) Pr (2A/D ≈ 1.324 && 2B/D ≈ 4.138 | genotype = 1$\alpha$:3$\beta$:2$\delta$)
+= 0.434 * 0.0002521
+lik (1$\alpha$:4$\beta$:2$\delta$) ~ Pr (1$\alpha$:4$\beta$:2$\delta$) Pr (2A/D ≈ 1.324 && 2B/D ≈ 4.138 | genotype = 1$\alpha$:4$\beta$:2$\delta$)
+= 0.03 * 0.0012967
+lik (1$\alpha$:5$\beta$:2$\delta$) ~ Pr (1$\alpha$:5$\beta$:2$\delta$) Pr (2A/D ≈ 1.324 && 2B/D ≈ 4.138 | genotype = 1$\alpha$:5$\beta$:2$\delta$)
+= 0.0004 * 0.000019
+
+The posterior probability of a 1$\alpha$:3$\beta$:2$\delta$ genotype is estimated at 
+
+(0.434*0.0002521) / (0.434*0.0002521 + 0.03 * 0.0012967 + 0.0004 * 0.000019) = 0.738
+
+Note that this estimate (and many others) is highly sensitive to the (unknown) prior population frequencies. Pr (data | genotype) is highest for 1$\alpha$:4$\beta$:2$\delta$ by a factor of 5, but this is swamped out by the very low prior for the allele frequency.
+
+
+Table 1. Prior estimates of tryptase genotype frequencies, stratified by ancestry: EUR = European, EAS = East Asian, AFR = African, SAS = South Asian
+
+$\alpha$ copy #	$\beta$ copy #	EUR	EAS	AFR	SAS
+0	2	0.0001	0.025	0.001	0.004
+0	3	0.013	0.037	0.015	0.053
+0	4	0.219	0.032	0.274	0.165
+0	5	0.020028	0.004	0.1	0.0325
+0	6	0.0004	0.0002	0.008	0.0006
+0	7	0.00005	0.00002	0.0003	0.00005
+0	8	0.00001	0.000002	0.0001	0.000005
+1	1	0.0001	0.0021	0.0001	0.0005
+1	2	0.013	0.22	0.012	0.017
+1	3	0.434	0.23	0.39	0.444
+1	4	0.03	0.012	0.06	0.01
+1	5	0.0004	0.0005	0.005	0.0005
+1	6	0.00001	0.00001	0.0001	0.00005
+1	7	0.000001	0.000003	0.00001	0.000005
+2	1	0.001	0.004	0.0007	0.0003
+2	2	0.208	0.42	0.126536	0.256129
+2	3	0.03	0.005	0.003	0.004
+2	4	0.004	0.0005	0.0001	0.001
+2	5	0.0001	0.00001	0.00001	0.0001
+2	6	0.00004	0.000002	0.000001	0.00001
+3	1	0.0001	0.0001	0.0001	0.0001
+3	2	0.018	0.006	0.003	0.01
+3	3	0.005	0.001	0.0003	0.0003
+3	4	0.0004	0.0001	0.0001	0.0001
+3	5	0.00001	0.00001	0.0001	0.00001
+4	2	0.002	0.0001	0.0001	0.0003
+4	3	0.0008	0.0001	0.0001	0.0001
+4	4	0.00005	0.0001	0.0001	0.0001
+4	5	0.00001	0.0001	0.0001	0.0001
+5	2	0.0002	0.00001	0.00001	0.00001
+5	3	0.0001	0.00001	0.00001	0.00001
+5	4	0.00004	0.00001	0.00001	0.00001
+5	5	0.00001	0.00001	0.00001	0.00001
+6	2	0.00003	0.000001	0.000001	0.00001
+6	3	0.00001	0.000001	0.000001	0.000001
+6	4	0.000001	0.000001	0.000001	0.000001
+
+
+
+
+`R` session information.
+
+```{r reproduce3, echo=FALSE}
+## Session info
+library("sessioninfo")
+options(width = 120)
+session_info()
+```
+
+
+
+# Bibliography
+
+This vignette was generated using `r Biocpkg("BiocStyle")` `r Citep(bib[["BiocStyle"]])`
+with `r CRANpkg("knitr")` `r Citep(bib[["knitr"]])` and `r CRANpkg("rmarkdown")` `r Citep(bib[["rmarkdown"]])` running behind the scenes.
+
+Citations made with `r CRANpkg("RefManageR")` `r Citep(bib[["RefManageR"]])`.
+
+```{r vignetteBiblio, results = "asis", echo = FALSE, warning = FALSE, message = FALSE}
+## Print bibliography
+PrintBibliography(bib, .opts = list(hyperlink = "to.doc", style = "html"))
+```
