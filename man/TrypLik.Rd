@@ -17,7 +17,8 @@ TrypLik(wt, fs, areads, breads, dreads, pop = 0)
 
 \item{dreads}{delta counts}
 
-\item{pop}{population to use (1=, 2=)}
+\item{pop}{population to use (0=EUR, 1=AFR, 2=EAS, 3=SAS) as either a number
+or character string}
 }
 \value{
 a \code{data.frame}

@@ -50,6 +50,8 @@ void do_tryptase_calc (int WT, int FS, int Areads, int Breads, int Dreads, int P
     FSfreq = 0.0436;
   else if (POP==2)
     FSfreq = 0.0014;
+  else if (POP==3)
+    FSfreq = 0.0575;
   else
     FSfreq = 0.1349;
 
@@ -165,7 +167,7 @@ void do_tryptase_calc (int WT, int FS, int Areads, int Breads, int Dreads, int P
     GenoPriors[6][4] = 0.000001;
   }
   else if (POP==2) { /* Sets genotype priors for EAS ancestry populations */
-GenoPriors[0][2] = 0.025;
+    GenoPriors[0][2] = 0.025;
     GenoPriors[0][3] = 0.037;
     GenoPriors[0][4] = 0.032;
     GenoPriors[0][5] = 0.004;
@@ -205,6 +207,50 @@ GenoPriors[0][2] = 0.025;
     GenoPriors[5][5] = 0.00001;
 
     GenoPriors[6][2] = 0.000001;
+    GenoPriors[6][3] = 0.000001;
+    GenoPriors[6][4] = 0.000001;
+  }
+  else if (POP==3) { /* Sets genotype priors for SAS ancestry populations */
+    GenoPriors[0][2] = 0.004;
+    GenoPriors[0][3] = 0.053;
+    GenoPriors[0][4] = 0.165;
+    GenoPriors[0][5] = 0.0325;
+    GenoPriors[0][6] = 0.0006;
+    GenoPriors[0][7] = 0.00005;
+    GenoPriors[0][8] = 0.000005;
+
+    GenoPriors[1][1] = 0.0005;
+    GenoPriors[1][2] = 0.017;
+    GenoPriors[1][3] = 0.444;
+    GenoPriors[1][4] = 0.01;
+    GenoPriors[1][5] = 0.0005;
+    GenoPriors[1][6] = 0.00005;
+    GenoPriors[1][7] = 0.000005;
+
+    GenoPriors[2][1] = 0.0003;
+    GenoPriors[2][2] = 0.256129;
+    GenoPriors[2][3] = 0.004;
+    GenoPriors[2][4] = 0.001;
+    GenoPriors[2][5] = 0.0001;
+    GenoPriors[2][6] = 0.00001;
+
+    GenoPriors[3][1] = 0.0001;
+    GenoPriors[3][2] = 0.01;
+    GenoPriors[3][3] = 0.0003;
+    GenoPriors[3][4] = 0.0001;
+    GenoPriors[3][5] = 0.00001;
+
+    GenoPriors[4][2] = 0.0003;
+    GenoPriors[4][3] = 0.0001;
+    GenoPriors[4][4] = 0.0001;
+    GenoPriors[4][5] = 0.0001;
+
+    GenoPriors[5][2] = 0.0001;
+    GenoPriors[5][3] = 0.00001;
+    GenoPriors[5][4] = 0.00001;
+    GenoPriors[5][5] = 0.00001;
+
+    GenoPriors[6][2] = 0.00001;
     GenoPriors[6][3] = 0.000001;
     GenoPriors[6][4] = 0.000001;
   }
