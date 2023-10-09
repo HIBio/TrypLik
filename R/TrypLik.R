@@ -19,6 +19,12 @@ TrypLik <- function(wt, fs, areads, breads, dreads, pop = 0) {
         as.integer(pop))
 }
 
+#' Select a genetic-ancestry population
+#'
+#' @param pop population to use (0=EUR, 1=AFR, 2=EAS, 3=SAS) as either a number
+#'   or character string
+#' @importFrom stats setNames
+#' @export
 select_population <- function(pop = NULL) {
   supported_pops <- c("EUR", "AFR", "EAS", "SAS")
   stopifnot("pop must be provided" = !is.null(pop))
@@ -30,5 +36,5 @@ select_population <- function(pop = NULL) {
     popname <- pop
     pop <- which(popname == supported_pops)
   }
-  setNames(pop, popname)
+  stats::setNames(pop, popname)
 }
