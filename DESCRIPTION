@@ -15,9 +15,12 @@ RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 Suggests: 
     BiocStyle,
+    ggplot2,
     knitr,
     RefManageR,
     rmarkdown,
     sessioninfo,
     testthat
 VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)

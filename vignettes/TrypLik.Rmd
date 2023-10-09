@@ -22,6 +22,7 @@ vignette: >
   %\VignetteIndexEntry{TrypLik}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}  
+  %\VignetteDepends{ggplot2}
 ---
 
 ```{r setup, include = FALSE}
@@ -30,6 +31,10 @@ knitr::opts_chunk$set(
     comment = "#>",
     crop = NULL ## Related to https://stat.ethz.ch/pipermail/bioc-devel/2020-April/016656.html
 )
+
+required <- c("ggplot2")
+if (!all(unlist(lapply(required, function(pkg) requireNamespace(pkg, quietly = TRUE)))))
+  knitr::opts_chunk$set(eval = FALSE)
 ```
 
 ```{r vignetteSetup, echo=FALSE, message=FALSE, warning = FALSE}
@@ -49,21 +54,40 @@ lyons <- bibentry(
   pages = "1564-1569", 
   doi = "doi:10.1038/ng.3696"
 )
-chollet <- bibentry()
+maun <- bibentry(
+  bibtype = "Article",
+  author = c(person(given = "Henry", middle = "R", family = "Maun et al.")),
+  title = "An Allosteric Anti-tryptase Antibody for the Treatment of Mast Cell-Mediated Severe Asthma",
+  journal = "Cell",
+  year = "2019",
+  volume = "179(2)",
+  pages = "417-431",
+  doi = "doi:10.1016/j.cell.2019.09.009"
+)
 glover <- bibentry()
-maun <- bibentry()
+chollet <- bibentry()
+chovanec <- bibentry(
+  bibtype = "Unpublished",
+  author = "Chovanec",
+  title = "Unpublished data",
+  note = "TBA",
+  year = "2022"
+)
 
 ## Write bibliography information
 bib <- c(
     R = citation(),
     BiocStyle = citation("BiocStyle")[1],
+    biocthis = citation("biocthis")[1],
     knitr = citation("knitr")[1],
     RefManageR = citation("RefManageR")[1],
     rmarkdown = citation("rmarkdown")[1],
     sessioninfo = citation("sessioninfo")[1],
     testthat = citation("testthat")[1],
     TrypLik = citation("TrypLik")[1],
-    lyons
+    lyons,
+    maun,
+    chovanec
 )
 ```
 
@@ -140,14 +164,15 @@ known about the clinical effects of tryptase $\beta$ copy number variation.
 
 While $\alpha$, $\beta$, and $\beta$III$^{FS}$ copy numbers can be accurately
 determined using custom droplet digital PCR (ddPCR) assays (cf. `r AutoCite(lyons)`), 
-it is much more challenging to estimate copy numbers from standard
-short-read (e.g. Illumina) sequence data, even with a high depth of coverage.
-This is primarily due to the fact that $\alpha$, $\beta$, and $\beta$III$^{FS}$
-tryptase alleles are so similar, but exacerbated by errors in the human
-reference genome assembly (hg38), which appears to have chimeric alleles for
-both TPSAB1 and TPSB2. In addition, the published allelic sequences in Maun et
-al. (2019) also appear to be incorrect. This has motivated our efforts to
-generate our own consensus assemblies of different tryptase alleles (see below).
+it is much more challenging to estimate copy numbers from
+standard short-read (e.g. Illumina) sequence data, even with a high depth of
+coverage. This is primarily due to the fact that $\alpha$, $\beta$, and
+$\beta$III$^{FS}$ tryptase alleles are so similar, but exacerbated by errors in
+the human reference genome assembly (hg38), which appears to have chimeric
+alleles for both TPSAB1 and TPSB2. In addition, the published allelic sequences
+in `r AutoCite(maun)` also appear to be incorrect. This has motivated our
+efforts to generate our own consensus assemblies of different tryptase alleles
+(see below).
 
 # Instructions on use
 
@@ -195,8 +220,8 @@ samtools fastq -1 HG00100.tryptase.R1.fastq -2 HG00100.tryptase.R2.fastq -0 /dev
 
 ### Mapping reads to tryptase consensus sequence 
 
-Here, we are using the tryptase consensus sequence published by Maun et al.
-(2019) to winnow out reads that are in the tryptase region that do not actually
+Here, we are using the tryptase consensus sequence published by `r AutoCite(maun)`
+to winnow out reads that are in the tryptase region that do not actually
 map to tryptase genes. The following command works for our continuing example:
 
 ```bash
@@ -302,7 +327,7 @@ The method estimates that HG00100 has a 2$\alpha:2\beta:2\delta$ genotype
 ## de novo assembly/alignment
 
 We started by aligning cDNA sequences to a 40 bp region near the probes used by
-Lyons et al. (2016, Supplementary Figure 3b) for ddPCR.
+`r AutoCite(lyons)`(Supplementary Figure 3b) for ddPCR.
 
 <div class="lefttable">
 |   |      |
@@ -351,7 +376,7 @@ over evolutionarily recent time scales.
 
 The tryptase allele assemblies generated here differ slightly from all
 previously published assemblies, including some of the cDNA sequences, the `r AutoCite(lyons)` 
-tryptase alignment, the Maun et al. (2019) tryptase alignment, and
+tryptase alignment, the `r AutoCite(maun)` tryptase alignment, and
 the human reference genome (hg38). We believe though that Illumina reads are
 highly accurate, and can show how these previous assemblies are inconsistent
 with Illumina data from multiple individuals.
@@ -360,7 +385,7 @@ with Illumina data from multiple individuals.
 
 From the alignment described above, we identified $11$ different $30$ bp regions
 where reads could be uniquely mapped to $\alpha$, $\beta$, or $\delta$ alleles.
-Using the base numbering defined by Maun et al. (2019, Data S1) and also used in
+Using the base numbering defined by `r AutoCite(maun)`(Data S1) and also used in
 the accompanying table, these correspond to the following regions:
 
 ```{=latex}
@@ -394,7 +419,7 @@ misclassified reads. This is perhaps most important in the analysis of
 non-European ancestry individuals.
 
 1. The method assumes that all CNVs affect the entire $1$ Kbp test region, though we
-know this isn’t true. Chovanac et al. (2022) report the existence of σ alleles,
+know this isn’t true. `r AutoCite(chovanec)` report the existence of σ alleles,
 which appear to be a chimera of $\alpha$ and $\beta$ alleles. In our analyses,
 these alleles are estimated as partial $\alpha$ and partial $\beta$,
 proportional to the numbers of reads mapping to each canonical allele assembly.
@@ -488,9 +513,16 @@ We use empirical data from the EUR populations from the 1000 Genomes Project to
 estimate these correction factors. First, we plotted $2A/D$ vs. $2B/D$ for these $503$
 samples:
 
+```{r, genomes, class.source="fold-hide"}
+data("genomes", package = "TrypLik")
 
-Figure 1.
- 
+library(ggplot2)
+
+ggplot(genomes, aes(`2A/D`, `2B/D`, col = `Geno Group`)) + 
+  geom_point() +
+  theme_bw() +
+  theme(text = element_text(size = 16))
+```
 
 We focus on the dots colored green, which are estimated to have a tryptase
 genotype of $1\alpha:3\beta:2\delta$. The average values of $2A/D$ and
@@ -614,16 +646,6 @@ ancestry: EUR = European, EAS = East Asian, AFR = African, SAS = South Asian
 |6|4|0.000001|0.000001|0.000001|0.000001|
 </div>
 
-
-`R` session information.
-
-```{r reproduce3, echo=FALSE}
-## Session info
-library("sessioninfo")
-options(width = 120)
-session_info()
-```
-
 ## Citing `TrypLik`
 
 We hope that `r Biocpkg("TrypLik")` will be useful for your research. Please use the following information to cite the package and the overall approach. Thank you!
@@ -638,13 +660,11 @@ The `r Biocpkg("TrypLik")` package `r Citep(bib[["TrypLik"]])` was made possible
 
 * R `r Citep(bib[["R"]])`
 * `r Biocpkg("BiocStyle")` `r Citep(bib[["BiocStyle"]])`
+* `r Biocpkg("biocthis")` `r Citep(bib[["biocthis"]])`
 * `r CRANpkg("knitr")` `r Citep(bib[["knitr"]])`
 * `r CRANpkg("RefManageR")` `r Citep(bib[["RefManageR"]])`
 * `r CRANpkg("rmarkdown")` `r Citep(bib[["rmarkdown"]])`
-* `r CRANpkg("sessioninfo")` `r Citep(bib[["sessioninfo"]])`
-* `r CRANpkg("testthat")` `r Citep(bib[["testthat"]])`
 
-This package was developed using `r BiocStyle::Biocpkg("biocthis")`.
 
 # Bibliography
 
