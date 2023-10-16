@@ -64,8 +64,29 @@ maun <- bibentry(
   pages = "417-431",
   doi = "doi:10.1016/j.cell.2019.09.009"
 )
-glover <- bibentry()
-chollet <- bibentry()
+glover <- bibentry(
+  bibtype = "Article",
+  author = c(person(given = "Sarah", middle = "C", family = "Glover"),
+             person(given = "Alexander", family = "Carlyle"),
+             person(given = "Jonathan", middle = "J", family = "Lyons")),
+  title = "Hereditary alpha-tryptasemia despite normal tryptase-encoding gene copy number owing to copy number loss in trans",
+  journal = "Annals of Allergy, Asthma & Immunology",
+  year = "2022",
+  volume = "128(4)",
+  pages = "460-461",
+  doi = "10.1016/j.anai.2021.12.008"
+)
+chollet <- bibentry(
+  bibtype = "Article",
+  author = c(person(given = "Madeleine", middle = "B", family = "Chollet"),
+             person(given = "Anna", family = "Kovalszki"),
+             person(given = "Cem", family = "Akin")),
+  title = "A novel case of beta-tryptase/TPSB2 allele duplication",
+  journal = "Journal of Allergy and Clinical Immunology",
+  year = "2021",
+  volume = "147(2) supplement",
+  doi = "10.1016/j.jaci.2020.12.491"
+)
 chovanec <- bibentry(
   bibtype = "Unpublished",
   author = "Chovanec",
@@ -87,8 +108,12 @@ bib <- c(
     TrypLik = citation("TrypLik")[1],
     lyons,
     maun,
+    glover,
+    chollet,
     chovanec
 )
+
+BibOptions(max.names = 1, longnamesfirst = FALSE)
 ```
 
 <!-- # Basics -->
@@ -116,17 +141,48 @@ bib <- c(
 
 ```{css, echo=FALSE}
 .bgr {
-  background-color: red;
+  background-color: salmon;
   padding: 0;
 }
 .bgy {
   background-color: yellow;
   padding: 0;
 }
+.bgg {
+  background-color: springgreen;
+  padding: 0;
+}
+.bgp {
+  background-color: pink;
+  padding: 0;
+}
+.tg {
+  background-color: unset;
+  font-weight: bold;
+  padding: unset;
+  color: green
+}
+.bgx {
+  background-color: silver;
+  padding: 0;
+}
+.mono {
+  font-family: monospace;
+  font-size: 120%;
+}
 .lefttable table {
   margin-left: 50px;
-  max-width: 600px;
-  <!-- width: 100%; -->
+  max-width: 700px;
+}
+.superwide table {
+  margin-left: 50px;
+  max-width: 1000px;
+  width: 120%;
+}
+.evensuperwider table {
+  margin-left: 50px;
+  max-width: 1600px;
+  width: 150%;
 }
 ```
 
@@ -157,8 +213,8 @@ tryptasemia (H$\alpha$T), which is associated with one or more duplications of
 the $\alpha$ allele in TPSAB1 `r AutoCite(lyons)`. Common phenotypes found in
 H$\alpha$T patients include systemic venom reactions, pruritis, IBS, reflux,
 skeletal abnormalities, retained primary dentition and anthralgia. There is
-also evidence for $\beta$ duplications and deletions (Chollet et al. 2021,
-Glover et al. 2022), though it is not yet clear if this reflects copy number
+also evidence for $\beta$ duplications and deletions (`r AutoCite(chollet)`,
+`r AutoCite(glover)`), though it is not yet clear if this reflects copy number
 variants (CNVs) in only TPSAB1 or CNVs in both TPSAB1 and TPSAB2. Nothing is
 known about the clinical effects of tryptase $\beta$ copy number variation.
 
@@ -332,11 +388,11 @@ We started by aligning cDNA sequences to a 40 bp region near the probes used by
 <div class="lefttable">
 |   |      |
 |---|:-----|
-| Delta (CCDS10432.1) | <tt>CCAGGCCAGG CCCTGCAGCA A<mark class="bgr">A</mark>CGGGCAT<mark class="bgr">T</mark> GTTGGGGG<mark class="bgr">G</mark>C</tt> |
-| Alpha (M30038.1)  | <tt>CCAG<mark class="bgy">T</mark>CCAGG CCCTGCAGCA AG<mark class="bgy">C</mark>GGG<mark class="bgy">T</mark>ATC GT<mark class="bgy">C</mark>GGGGGTC</tt> |
-| Beta1 (M33492.1)   | <tt>CCAG<mark class="bgy">G</mark>CCAGG CCCTGCAGC<mark class="bgy">G</mark> AG<mark class="bgy">T</mark>GGG<mark class="bgy">C</mark>ATC GT<mark class="bgy">C</mark>GGGGGTC</tt> | 
-| Beta2 (BC065923.1)  | <tt>CCAG<mark class="bgy">G</mark>CCAGG CCCTGCAGC<mark class="bgy">G</mark> AG<mark class="bgy">T</mark>GGG<mark class="bgy">C</mark>ATC GT<mark class="bgy">T</mark>GGGGGTC</tt> |
-| Beta3 (AF099143)  | <tt>CCAG<mark class="bgy">G</mark>CCAGG CCCTG<mark class="bgy">C</mark>AGC<mark class="bgy">G</mark> AG<mark class="bgy">T</mark>GGG<mark class="bgy">C</mark>ATC GT<mark class="bgy">T</mark>GGGGGTC</tt> |
+| Delta (CCDS10432.1) | <span class="mono">CCAGGCCAGG CCCTGCAGCA A<mark class="bgr">A</mark>CGGGCAT<mark class="bgr">T</mark> GTTGGGGG<mark class="bgr">G</mark>C</span> |
+| Alpha (M30038.1)  | <span class="mono">CCAG<mark class="bgy">T</mark>CCAGG CCCTGCAGCA AG<mark class="bgy">C</mark>GGG<mark class="bgy">T</mark>ATC GT<mark class="bgy">C</mark>GGGGGTC</span> |
+| Beta1 (M33492.1)   | <span class="mono">CCAG<mark class="bgy">G</mark>CCAGG CCCTGCAGC<mark class="bgy">G</mark> AG<mark class="bgy">T</mark>GGG<mark class="bgy">C</mark>ATC GT<mark class="bgy">C</mark>GGGGGTC</span> | 
+| Beta2 (BC065923.1)  | <span class="mono">CCAG<mark class="bgy">G</mark>CCAGG CCCTGCAGC<mark class="bgy">G</mark> AG<mark class="bgy">T</mark>GGG<mark class="bgy">C</mark>ATC GT<mark class="bgy">T</mark>GGGGGTC</span> |
+| Beta3 (AF099143)  | <span class="mono">CCAG<mark class="bgy">G</mark>CCAGG CCCTG<mark class="bgy">C</mark>AGC<mark class="bgy">G</mark> AG<mark class="bgy">T</mark>GGG<mark class="bgy">C</mark>ATC GT<mark class="bgy">T</mark>GGGGGTC</span> |
 </div>
 
 Here sites in red are fixed differences between TPSD1 and (TPSAB1+TPSB2), while
@@ -347,8 +403,8 @@ primer as follows:
 
 |   |      |
 |---|:-----|
-| Beta2 (BC065923.1) | <tt>GAGAGTCC<mark class="bgy">**A**</mark>C G<mark class="bgy">**G**</mark>CC<mark class="bgy">**C**</mark>ATACT</tt> |
-| Beta3 (AF099143)   | <tt>GAGAGTCC<mark class="bgy">**G**</mark>C G<mark class="bgy">**A**</mark>CC<mark class="bgy">**G**</mark>ATACT</tt> |
+| Beta2 (BC065923.1) | <span class="mono">GAGAGTCC<mark class="bgy">A</mark>C G<mark class="bgy">G</mark>CC<mark class="bgy">C</mark>ATACT</span> |
+| Beta3 (AF099143)   | <span class="mono">GAGAGTCC<mark class="bgy">G</mark>C G<mark class="bgy">A</mark>CC<mark class="bgy">G</mark>ATACT</span> |
 
 We assumed that the sequences listed above are correct and invariant in the
 different tryptase alleles. We then used Illumina short read data to ‘extend’
@@ -444,8 +500,8 @@ $\beta$ alleles:
 
 |   |      |
 |---|:-----|
-| $\beta$III$^{FS}$ | <tt>CTCAGAGACC TTCCCCCCCG GGGATGCCGT</tt> |
-| All other $\beta$ | <tt>CTCAGAGACC TTCCCCCC-G GGGATGCCGTG</tt> |
+| $\beta$III$^{FS}$ | <span class="mono">CTCAGAGACC TTCCCCCCCG GGGATGCCGT</span> |
+| All other $\beta$ | <span class="mono">CTCAGAGACC TTCCCCCC&ndash;G GGGATGCCGTG</span> |
  
 (Note that both $\alpha$ and $\sigma$ alleles do not map to either of these sequences.)
 The observed numbers of reads in each of these two categories (called here FS+
@@ -646,6 +702,295 @@ ancestry: EUR = European, EAS = East Asian, AFR = African, SAS = South Asian
 |6|4|0.000001|0.000001|0.000001|0.000001|
 </div>
 
+# Appendix
+
+Tryptase region consensus alignments for different alleles, using the numbering of `r AutoCite(maun)`
+
+<mark class="tg">Green text</mark> = cDNA sequence is potentially incorrect
+
+<mark class="bgr">Red highlight</mark> = fixed difference between delta and (alpha + beta)
+
+<mark class="bgy">Yellow highlight</mark> = polymorphic within alpha + beta, and
+can be used to discriminate between alpha &/or beta alleles
+
+<mark class="bgx">Grey highlight</mark> = polymorphic within the specific allele/gene
+
+### Bases 370 -- 449
+
+<div class="superwide">
+  <table class="table table-condensed">
+    <tr style="border-top: 1px solid #ccc;">
+      <td width="8%;">delta</td><td><span class="mono">GCCCGTCCTG GCGAGCC<mark class="bgx">CG</mark>G CCTACG<mark class="bgx">T</mark>GGC CCCTGGTGAG TCCCAGCC<mark class="bgx">G</mark>G GGTCCACCCT GCCCCTCACC ACATTCCACA</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>alpha</td><td><span class="mono">GCCCGTCCTG GCGAGCC<mark class="bgx">GC</mark>G CCTACGCGGC CCCTGGTGAG TCCCAGCCGG GGTCCACCCT GCCCCTCACC ACATTCCACA</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta</td><td><span class="mono">GCCCGTCCTG GCGAGCCGCG CCTACG<mark class="bgx">C</mark>GGC CCCTGGTGAG TCCCAGCC<mark class="bgx">G</mark>G GGTCCACCCT GCCCCTCACC ACATTCCACA</span></td>
+    </tr>
+    </table>
+</div>
+
+### Bases 450 -- 549 
+
+<div class="evensuperwider">
+  <table class="table table-condensed">
+    <tr style="border-top: 1px solid #ccc;">
+      <td width="8%;">delta</td><td><span class="mono">GATCAGGGCC TGGGTGGGTT CTGGGGAGGC CGGGCTGGCC CCCACACAGG GAAGGGCTGG <mark class="bgr">T</mark>CCCAGGCGT GGGGC<mark class="bgr">G</mark>GCTT C<mark class="bgr">T</mark>TGGTCCTG ACCTGGCACC</span></td>
+      </tr>
+      <tr style="border-top: 1px solid #ccc;">
+        <td>alpha</td><td><span class="mono">GGTCAGGGCC TGGGTGGGTT CTGGGGAGGC <mark class="bgy">T</mark>GGGCTGGCC CCCACACAGG GAAGGG<mark class="bgx">G</mark>TGG GCCCAGGC<mark class="bgy">G</mark>T GGGGCTGCTT CCTGGTCCTG ACCTGGCACC</span></td>
+      </tr>
+      <tr style="border-top: 1px solid #ccc;">
+        <td>beta1</td><td><span class="mono">G<mark class="bgx">G</mark>TCAGGGCC TGGGTGGGTT CTGGGGAGG<mark class="bgx">C</mark> <mark class="bgy">C</mark>GGGCTGGCC CCCACACAGG GAAGGGCTGG GCCCAGGC<mark class="bgx">G</mark>T GGGGCTGCTT CCTGGTCCTG ACCTGGCACC</span></td>
+      </tr>
+      <tr style="border-top: 1px solid #ccc;">
+        <td>beta2</td><td><span class="mono">G<mark class="bgx">G</mark>TCAGGGCC TGGGTGGGTT CTGGGGAGG<mark class="bgx">C</mark> <mark class="bgy">C</mark>GGGCTGGCC CCCACACAGG GAAGGGCTGG GCCCAGGC<mark class="bgy">C</mark>T GGGGCTGCTT CCTGGTCCTG ACCTGGCACC</span></td>
+      </tr>
+      <tr style="border-top: 1px solid #ccc;">
+        <td>beta3</td><td><span class="mono">G<mark class="bgx">G</mark>TCAGGGCC TGGGTGGGTT CTGGGGAGG<mark class="bgx">C</mark> <mark class="bgy">C</mark>GGGCTGGCC CCCACACAGG GAAGGGCTGG GCCCAGGC<mark class="bgy">C</mark>T GGGGCTGCTT CCTGGTCCTG ACCTGGCACC</span></td>
+    </tr>
+  </table>
+</div>
+
+### Bases 550 -- 649 
+
+<div class="evensuperwider">
+  <table class="table table-condensed">
+    <tr style="border-top: 1px solid #ccc;">
+      <td width="8%;">delta</td><td><span class="mono"><mark class="tg">T</mark>GCCCC<mark class="tg">A</mark>GCC CCAGGCCAGG CCCTGCAGCA A<mark class="bgr">A</mark>CGGGCAT<mark class="bgr">T</mark> GTTGGGGG<mark class="bgr">G</mark>C AG<mark class="bgx">G</mark>AGGCCCC CAGGAGCAAG TGGCCCTGGC AGGTGAGCCT GAGAGTCCGC</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>alpha</td><td><span class="mono"><mark class="tg">T</mark>GCCCC<mark class="tg">A</mark>GCC CCAG<mark class="bgy">T</mark>CCAGG CCCTGCAGC<mark class="bgy">A</mark> AG<mark class="bgy">C</mark>GGG<mark class="bgy">T</mark>ATC GT<mark class="bgy">C</mark>GGGGGTC AGGAGGCCCC CAGGAGCAAG TGGCCCTGGC AGGTGAGCCT GAGAGTCC<mark class="bgy">G</mark>C</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta1</td><td><span class="mono">TGCCCCAGCC CCAG<mark class="bgy">G</mark>CCAGG CCCTGCAGC<mark class="bgy">G</mark> AG<mark class="bgy">T</mark>GGG<mark class="bgy">C</mark>ATC GT<mark class="bgy">C</mark>GGGGGTC AGGAGGCCCC CAGGAGCAAG TGGCCCTGGC AGGTGAGCCT GAGAGTCC<mark class="bgy">A</mark>C</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta2</td><td><span class="mono"><mark class="tg">T</mark>GCCCC<mark class="tg">A</mark>GCC CCAG<mark class="bgy">G</mark>CCAGG CCCTGCAGC<mark class="bgy">G</mark> AG<mark class="bgy">T</mark>GGG<mark class="bgy">C</mark>ATC GT<mark class="bgy">T</mark>GGGGGTC AGGAGGCCCC CAGGAGCAAG TGGCCCTGGC AGGTGAGCCT GAGAGTCC<mark class="bgy">A</mark>C</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta3</td><td><span class="mono">TGCCCCAGCC CCAG<mark class="bgy">G</mark>CCAGG CCCTGCAGC<mark class="bgy">G</mark> AG<mark class="bgy">T</mark>GGG<mark class="bgy">C</mark>ATC GT<mark class="bgy">T</mark>GGGGGTC AGGAGGCCCC CAGGAGCAAG TGGCCCTGGC AGGTGAGCCT GAGAGTCC<mark class="bgy">G</mark>C</span></td>
+    </tr>
+  </table>
+</div>
+
+### Bases 650 -- 749 
+
+<div class="evensuperwider">
+  <table class="table table-condensed">
+    <tr style="border-top: 1px solid #ccc;">
+      <td width="8%;">delta</td><td><span class="mono">GGCCCATACT GGATGCACTT CTGCGGGGGC TCC<mark class="bgx">C</mark>TCATCC ACCCCCAGTG GGTGCT<mark class="bgr">A</mark>ACC GC<mark class="bgx">G</mark>GCGCACT GC<mark class="bgx">G</mark>TGG<mark class="bgr">A</mark>ACC GTGAGTCTCC <mark class="bgr">T</mark>GGGGCCTGG</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>alpha</td><td><span class="mono">G<mark class="bgy">A</mark>CC<mark class="bgy">G</mark>ATACT GGATGCACTT CTGCGGGGGC TCCCTCATCC ACCCCCAGTG GGTGCTGACC GC<mark class="bgy">G</mark>GCGCACT GC<mark class="bgy">C</mark>TGGGACC GTGAGTCTCC C<mark class="bgx">A</mark>GGGCCTGG</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta1</td><td><span class="mono">G<mark class="bgy">G</mark>CC<mark class="bgy">C</mark>ATACT GGATGCACTT CTGCGGGGGC TCCCTCATCC ACCCCCAGTG GGTGCTGACC GC<mark class="bgy">A</mark>GCGCACT GC<mark class="bgy">G</mark>TGGGACC GTGAGTCTCC CGGGGCCTGG</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta2</td><td><span class="mono">G<mark class="bgy">G</mark>CC<mark class="bgy">C</mark>ATACT GGATGCACTT CTGCGGGGGC TCCCTCATCC ACCCCCAGTG GGTGCTGACC GC<mark class="bgy">A</mark>GCGCACT GC<mark class="bgy">G</mark>TGGGACC GTGAGTCTCC CGGGGCCTGG</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta3</td><td><span class="mono">G<mark class="bgy">A</mark>CC<mark class="bgy">G</mark>ATACT GGATGCACTT CTGCGGGGGC TCCCTCATCC ACCCCCAGTG GGTGCTGACC GC<mark class="bgx">A</mark>GCGCACT GC<mark class="bgx">G</mark>TGGGACC GTGAGTCTCC CGGGGCCTGG</span></td>
+    </tr>
+  </table>
+</div>
+
+### Bases 750 -- 849
+
+<div class="evensuperwider">
+  <table class="table table-condensed">
+    <tr style="border-top: 1px solid #ccc;">
+      <td width="8%;">delta</td><td><span class="mono">AGGGGTGGGC AAGGGCTGGA TGTGAGCCCT GGCTCCCGGG TGCTCCTGGG GGCTGCCCAG GGCCCTGAGT GGGATCCTCC GCTGCCCAGG GAC<mark class="bgr">A</mark>TCAAGG</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>alpha</td><td><span class="mono">AGGGGTGGG<mark class="bgy">C</mark> AAGGGCTGGA TGTGAGCCCT GGCTCCCGGG TGCTCCTGGG GGCTGCCCAG GGCCCTGAGT GGGATCCTCC GCTGCCCAGG GACGTCAAGG</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta1</td><td><span class="mono">AGGGGTGGG<mark class="bgy">G</mark> AAGGGCTGGA TGTGAGCCCT GGCTCCCGGG TGCTCCTGGG GGCTGCCCAG GGCCCTGAGT GGGATCCTCC GCTGCCCAGG GACGTCAAGG</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta2</td><td><span class="mono">AGGGGTGGG<mark class="bgy">G</mark> AAGGGCTGGA TGTGAGCCCT GGCTCCCGGG TGCTCCTGGG GGCTGCCCAG GGCCCTGAGT GGGATCCTCC GCTGCCCAGG GACGTCAAGG</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta3</td><td><span class="mono">A<mark class="bgx">G</mark>GGGTGGG<mark class="bgy">G</mark> AAGGGCTGGA TGTGAGCCCT GGCTCCCGG<mark class="bgx">G</mark> TGCTCCTGGG GGCTGCCCAG GGCCCTGAGT GGGATCCTCC GCTGCCCAGG GACGTCAAGG</span></td>
+    </tr>
+  </table>
+</div>
+
+### Bases 850 -- 949 
+
+<div class="evensuperwider">
+  <table class="table table-condensed">
+    <tr style="border-top: 1px solid #ccc;">
+      <td width="8%;">delta</td><td><span class="mono">ATCTGGCCGC CCTCAGGGTG CAACTGCGGG AGCAGCACCT CTACTACCAG GACCAGCTGC TGCCGGTCAG CAGGATCATC GTGCACCCAC AGTTCTACAT</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>alpha</td><td><span class="mono">ATCTGGCC<mark class="bgy">A</mark>C CCTCAGGGTG CAACTGCGGG AGCAGCACCT CTACTACCAG GACCAGCTGC TGCC<mark class="bgx">G</mark>GTCAG CAGGATCATC GTGCACCCAC AGTTCTACA<mark class="bgy">T</mark></span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta1</td><td><span class="mono">ATCTGGCC<mark class="bgy">G</mark>C CCTCAGGGTG CAACTGCGGG AGCAGCACCT CTACTACCAG GACCAGCTGC TGCCGGTCAG CAGGATCATC GTGCACCCAC AGTTCTACA<mark class="bgy">C</mark></span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta2</td><td><span class="mono">ATCTGGCC<mark class="bgy">G</mark>C CCTCAGGGTG CAACTGCGGG AGCAGCACCT CTACTACCAG GACCAGCTGC TGCCGGTCAG CAGGATCATC GTGCACCCAC AGTTCTACA<mark class="bgy">C</mark></span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta3</td><td><span class="mono">ATCTGGCC<mark class="bgy">G</mark>C CCTCAGGGTG CAACTGCGGG AGCAGCACCT CTACTACCAG GACCAGCTGC TGCCGGTCAG CAGGATCATC GTGCACCCAC AGTTCTACA<mark class="bgy">C</mark></span></td>
+    </tr>
+  </table>
+</div>
+
+### Bases 950 -- 1049
+
+<div class="evensuperwider">
+  <table class="table table-condensed">
+    <tr style="border-top: 1px solid #ccc;">
+      <td width="8%;">delta</td><td><span class="mono">CATCCAGACC GG<mark class="bgr">G</mark>GCGGACA TCGCCCTGCT GGAGCTGGAG GAGCCCGTGA ACATCTCCAG CCAC<mark class="bgr">A</mark>TCCAC AC<mark class="bgx">G</mark>GTCACGC TGCCCCCTGC CTCGGAGACC</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>alpha</td><td><span class="mono">C<mark class="bgy">AT</mark>CCAGA<mark class="bgy">CT</mark> GGAGCGGA<mark class="bgy">T</mark>A TCGCCCTGCT GGAGCTGGAG GAGCC<mark class="bgy">C</mark>GTGA AC<mark class="bgy">A</mark>TCTCCAG CC<mark class="bgy">G</mark>CGTCCAC ACGGTCA<mark class="bgy">TG</mark>C TGCCCCCTGC CTC<mark class="bgy">G</mark>GAGACC</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta1</td><td><span class="mono">C<mark class="bgy">GC</mark>CCAGA<mark class="bgy">TC</mark> GGAGCGGA<mark class="bgy">C</mark>A TCGCCCTGCT GGAGCTGGAG GAGCC<mark class="bgy">G</mark>GTGA AC<mark class="bgy">G</mark>TCTCCAG CC<mark class="bgy">A</mark>CGTCCAC ACGGTCA<mark class="bgy">CC</mark>C TGCCCCCTGC CTC<mark class="bgy">A</mark>GAGACC</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta2</td><td><span class="mono">C<mark class="bgy">GC</mark>CCAGA<mark class="bgy">TC</mark> GGAGCGGA<mark class="bgy">C</mark>A TCGCCCTGCT GGAGCTGGAG GAGCC<mark class="bgy">G</mark>GTGA A<mark class="bgx">G</mark><mark class="bgy">G</mark>TCTCCAG CC<mark class="bgy">A</mark>CGTCCAC ACGGTCA<mark class="bgy">CC</mark>C TGCCCCCTGC CTC<mark class="bgy">A</mark>GAGACC</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta3</td><td><span class="mono">C<mark class="bgy">GC</mark>CCAGA<mark class="bgy">TC</mark> GGAGCGGA<mark class="bgy">C</mark>A TCGCCCTGCT GGAGCTGGAG GAGCC<mark class="bgy">G</mark>GTGA AC<mark class="bgy">G</mark>TCTCCAG CC<mark class="bgy">A</mark>CGTCCAC ACGGTCA<mark class="bgy">CC</mark>C TGCCCCCTGC CTC<mark class="bgy">A</mark>GAGACC</span></td>
+    </tr>
+  </table>
+</div>
+
+### Bases 1050 -- 1149
+
+<mark class="bgp">beta3FS location is colored pink</mark> [<span class="mono">&ndash;/C</span>]
+
+<div class="evensuperwider">
+  <table class="table table-condensed">
+    <tr style="border-top: 1px solid #ccc;">
+      <td width="8%;">delta</td><td><span class="mono">TTCCCCCCGG GGATGCCGTG CTGGGTCACT GGCTGGGGCG A<mark class="bgr">C</mark>GTGGACAA T<mark class="bgr">A</mark>ATGGTGGG <mark class="bgr">GTGT</mark>TGGGGA CAG<mark class="bgr">C</mark>GGGAGG <mark class="bgr">CC</mark>GGGCCAGG <mark class="bgr">TGGGCACCAA</mark></span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>alpha</td><td><span class="mono">TTCCCCCCGG GGATGCCGTG CTGGGTCACT GGCTGGGGCG ATGTGGACAA TGATGGTGGG &ndash;&ndash;TCTGGGGA CAGTGG<mark class="bgy">G</mark>AGG TGGGGCCAGG GTCTTAGCCA</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta1</td><td><span class="mono">TTCCCCCCGG GGATGCCGTG CTGGGTCACT GGCTGGGGCG ATGTGGACAA TGATGGTGGG &ndash;&ndash;TCTGGGGA CAGTGG<mark class="bgy">&ndash;</mark>AGG TGGGGCCAGG GTCTTAGCCA</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta2</td><td><span class="mono">TTCCCCCCGG GGATGCCGTG CTGGGTCACT GGCTGGGGCG ATGTGGACAA TGATGGTGGG &ndash;&ndash;TCTGGGGA CAGTGG<mark class="bgy">&ndash;</mark>AGG TGGGGCCAGG GTCTTAGCCA</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta3</td><td><span class="mono">TT<mark class="bgp">CCCCCC</mark>GG GGATGCCGTG CTGGGTCACT GGCTGGGGCG ATGTGGACAA TGATGGTGGG &ndash;&ndash;TCTGGGGA CAGTGG<mark class="bgy">&ndash;</mark>AGG TGGGGCCAGG GTCTTAGCCA</span></td>
+    </tr>
+  </table>
+</div>
+
+### Bases 1150 -- 1249
+
+<div class="evensuperwider">
+  <table class="table table-condensed">
+    <tr style="border-top: 1px solid #ccc;">
+      <td width="8%;">delta</td><td><span class="mono"><mark class="bgr">GTCACAGCCA</mark> <mark class="bgr">CAGGCCAGTC</mark> <mark class="bgr">CGTGGGGTGA</mark>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<mark class="bgr">CCCAG</mark>C<mark class="bgr">C</mark>G<mark class="bgr">G</mark>C CCC<mark class="bgr">AGAC</mark>C<mark class="bgr">C</mark>G GCT<mark class="bgr">C</mark>CAC<mark class="bgr">G</mark>C<mark class="bgr">C</mark></span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>alpha</td><td><span class="mono">CAGCCCAGCC CCTGG&ndash;&ndash;&ndash;&ndash;&ndash; &ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash; &ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash; &ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash;&ndash; &ndash;&ndash;&ndash;&ndash;&ndash;&ndash;GCTC CAGGTGGGGG TTGCCCGGCC CCCTCCT<mark class="bgy">C</mark>AG GCTGCACCCT</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta</td><td><span class="mono">CAGCCCAGCC CCTGGCCAGG GTCTTAGCCA CAGCCCAGCC CCTGGGCTCC CTCTGGGCTC CAGGTGGGGG TTGCCCGGCC CCCTCCT<mark class="bgy">G</mark>AG GCTGCACCCT</span></td>
+    </tr>
+  </table>
+</div>
+
+### Bases 1250 -- 1349
+
+<div class="evensuperwider">
+  <table class="table table-condensed">
+    <tr style="border-top: 1px solid #ccc;">
+      <td width="8%;">delta</td><td><span class="mono">C<mark class="bgr">CC</mark>C<mark class="bgr">T</mark>CC<mark class="bgr">G</mark>CC <mark class="bgr">CC</mark>CAG<mark class="bgr">T</mark>GC<mark class="bgr">A</mark>C CT<mark class="bgr">G</mark>CC<mark class="bgr">G</mark>CCGC CAT<mark class="bgr">AC</mark>CC<mark class="bgr">G</mark>CT GAAG<mark class="bgr">G</mark>AGGTG <mark class="bgr">G</mark>A<mark class="bgr">A</mark>GTCCCC<mark class="bgr">G</mark> TA<mark class="bgr">G</mark>TGGAAAA CCAC<mark class="bgr">C</mark>TTTG<mark class="bgr">C</mark> <mark class="bgr">A</mark>ACGC<mark class="bgr">GG</mark>AAT A<mark class="bgr">T</mark>CAC<mark class="bgr">ACC</mark>GG</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>alpha</td><td><span class="mono">CTTCCCCACC TGCAGAGC<mark class="bgy">C</mark>C CTC<mark class="bgx">C</mark>CACCGC CATTTCC<mark class="bgy">C</mark>CT GAAGCAGGTG AAGGTCCCCA TAATGGAAAA CCACATTTGT GACGCAAAAT ACCACCTTGG</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta</td><td><span class="mono">CTTCCCCACC TGCAGAGC<mark class="bgy">G</mark>C CTCCCACCGC CATTTCC<mark class="bgy">T</mark>CT GAAGCAGGTG AAGGTCCCCA TAATGGAAAA CCACATTTGT GACGCAAAAT ACCACCTTGG</span></td>
+    </tr>
+  </table>
+</div>
+
+### Bases 1350 -- 1449
+
+<div class="evensuperwider">
+  <table class="table table-condensed">
+    <tr style="border-top: 1px solid #ccc;">
+      <td width="8%;">delta</td><td><span class="mono">C<mark class="bgr">CT</mark>C<mark class="bgr">C</mark>A<mark class="bgr">T</mark>ACG GG<mark class="bgr">CC</mark>AC<mark class="bgr">AG</mark>C<mark class="bgr">T</mark> T<mark class="bgr">T</mark>C<mark class="bgr">AA</mark>ATCGT CCG<mark class="bgr">C</mark>GA<mark class="bgr">T</mark>GAC ATGCTGTGTG C<mark class="bgr">G</mark>GGGA<mark class="bgr">G</mark>CG<mark class="bgr">A</mark> <mark class="bgr">AA</mark>A<mark class="bgr">TCA</mark>CGAC</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>alpha1</td><td><span class="mono">CGCCTACACG GGAGACGACG TCCGCATC<mark class="bgy">A</mark>T CCGTGACGAC ATGCTGTGTG CCGGGAACA<mark class="bgy">G</mark> CC<mark class="bgy">A</mark>GAGGGAC TC<mark class="bgy">C</mark>TGC<mark class="bgy">A</mark>AGG TGGGCCCCGC GTGTCCCCCG</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>alpha2</td><td><span class="mono">CGCCTACACG GGAGACGACG TCCGCATC<mark class="bgy">A</mark>T CCGTGACGAC ATGCTGTGTG CCGGGAACA<mark class="bgy">C</mark> CC<mark class="bgy">G</mark>GAGGGAC TC<mark class="bgy">A</mark>TGC<mark class="bgy">C</mark>AGG TGGGCCCCGC GTGT<mark class="bgx">C</mark>CCCCG</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta</td><td><span class="mono">CGCCTACACG GGAGACGACG TCCGCATC<mark class="bgy">G</mark>T CCGTGACGAC ATGCTGTGTG CCGGGAACAC CCGGAGGGAC TC<mark class="bgy">A</mark>TGC<mark class="bgy">C</mark>AGG TGGGCCCCGC GTGTCCCCCG</span></td>
+    </tr>
+  </table>
+</div>
+
+### Bases 1450 -- 1549
+
+<div class="evensuperwider">
+  <table class="table table-condensed">
+    <tr style="border-top: 1px solid #ccc;">
+      <td width="8%;">delta</td><td><span class="mono"><mark class="bgr">GAGCGCATCC</mark> <mark class="bgr">CTCATCCTGA</mark> <mark class="bgr">CCCCCGAAGC</mark> <mark class="bgr">CTGGCCA</mark>GCG AGC<mark class="bgr">A</mark>CTGACC TCTGACCTTC CCAGGG<mark class="bgr">T</mark>GAC TCTGGAGGGC CCCTGGT<mark class="bgr">C</mark>TG CAAGGTGAAT</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>alpha1</td><td><span class="mono">CCCCCCGC<mark class="bgy">A</mark>C CCC<mark class="bgx">A</mark>A<mark class="bgx">T</mark>CCCC ACTCCC<mark class="bgy">G</mark>GG<mark class="bgy">T</mark> CTG<mark class="bgy">G</mark>TCGG<mark class="bgy">T</mark>G AGCGCTGACC TCTGACCTTC CCAGGGCGAC TC<mark class="bgy">T</mark>GGAGGGC CCCTGGTGTG CAAGGTGAAT</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>alpha2</td><td><span class="mono">CCCCCCGC<mark class="bgy">A</mark>C CCCAA<mark class="bgy">C</mark>CCCC ACTCCC<mark class="bgy">A</mark>GG<mark class="bgy">C</mark> CTG<mark class="bgy">T</mark>TCGG<mark class="bgy">C</mark>G AGCGCTGACC TCTGACCTTC CCAGGGCGAC TC<mark class="bgy">T</mark>GGAGGGC CCCTGGTGTG CAAGGTGAAT</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta</td><td><span class="mono">CCCCCCGC<mark class="bgx">C</mark>C CCCAACCCCC ACTCCCAGGC CTG<mark class="bgx">T</mark>TCGGCG AGCGCTGACC TCTGACCTTC CCAGGGCGAC TC<mark class="bgy">C</mark>GGAGGGC CCCTGGTGTG CAAGGTGAAT</span></td>
+    </tr>
+  </table>
+</div>
+
+### Bases 1550 -- 1649
+
+Alignment near putative functional alpha/beta mutation in <mark class="bgg">green</mark> (cf. `r AutoCite(maun)` supplement)
+
+<div class="evensuperwider">
+  <table class="table table-condensed">
+    <tr style="border-top: 1px solid #ccc;">
+      <td width="8%;">delta</td><td><span class="mono">GGCACCT<mark class="bgr">AA</mark>C TGCAGGCGGG CGTGGTCAGC TGGGA<mark class="bgr">G</mark>GAG<mark class="bgr">A</mark> GCTGTGCCCA GCCCAACCGG CCTGGCATCT ACACCCGTGT CACCTACTAC TTGGACTGGA</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>alpha</td><td><span class="mono">GGCACCTGGC T<mark class="bgy">A</mark>CAGGCGGG CGTGGTCAGC TGGG<mark class="bgg">A</mark>CGAGG GCTGTGCCCA GCCCAACCGG CCTGGCATCT ACACCCGTGT CACCTACTAC TTGGACTGGA</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta</td><td><span class="mono">GGCACCTGGC T<mark class="bgy">G</mark>CAGGCGGG CGTGGTCAGC TGGG<mark class="bgg">G</mark>CGAGG GCTGTGCCCA GCCCAACCGG CCTGGCATCT ACACCCGTGT CACCTACTAC TTGGACTGGA</span></td>
+    </tr>
+  </table>
+</div>
+
+### Bases 1650 -- 1749
+
+<div class="evensuperwider">
+  <table class="table table-condensed">
+    <tr style="border-top: 1px solid #ccc;">
+      <td width="8%;">delta</td><td><span class="mono">TCCACCACTA TGTCCCCAA<mark class="bgr">G</mark> AAGCC<mark class="bgr">C</mark>TGAG <mark class="bgr">C</mark>CAGGCCTGG GGTGTCCACC <mark class="bgr">C</mark>GGGTCACTG GAGGGCCAGC CCCTCCTGTC CAAA<mark class="bgr">C</mark>CACCA CTGCTTCCTA</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>alpha</td><td><span class="mono">TCCACCACTA TGTCCCCAAA AAGCCGTGAG TCAGGCCTGG GTTGGCCACC TGGGTCACTG GAG<mark class="bgx">GA</mark>CCA<mark class="bgx">AC</mark> CCCT<mark class="bgx">G</mark>CTGTC CAAAACACCA CTGCTTCCTA</span></td>
+    </tr>
+    <tr style="border-top: 1px solid #ccc;">
+      <td>beta</td><td><span class="mono">TCCACCACTA TGTCCCCAAA AAGCCGTGAG TCAGGCCTGG G<mark class="bgx">T</mark>TG<mark class="bgx">G</mark>CCACC TGGGTCACTG GAG<mark class="bgx">GA</mark>CCA<mark class="bgx">AC</mark> CCCT<mark class="bgx">G</mark>CTGTC CAAAACACCA CTGCTTCCTA</span></td>
+    </tr>
+  </table>
+</div>
+
 ## Citing `TrypLik`
 
 We hope that `r Biocpkg("TrypLik")` will be useful for your research. Please use the following information to cite the package and the overall approach. Thank you!
@@ -675,5 +1020,5 @@ Citations made with `r CRANpkg("RefManageR")` `r Citep(bib[["RefManageR"]])`.
 
 ```{r vignetteBiblio, results = "asis", echo = FALSE, warning = FALSE, message = FALSE}
 ## Print bibliography
-PrintBibliography(bib, .opts = list(hyperlink = "to.doc", style = "html"))
+PrintBibliography(bib, .opts = list(hyperlink = "to.doc", style = "html", max.names = 3))
 ```
