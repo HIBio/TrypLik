@@ -313,6 +313,7 @@ for (a=2; a<9; ++a)
 //       POP = 2;
 //   }
 //
+//   // note: memory leak since these aren't free()d
 //   FinalLiks = (long double ***) malloc (7 * sizeof (long double **));
 //   for (a=0; a<7; ++a) {
 //     FinalLiks[a] = (long double **) malloc (9 * sizeof (long double *));
@@ -358,11 +359,11 @@ SEXP C_tryplik (SEXP wt, SEXP fs, SEXP areads, SEXP breads, SEXP dreads, SEXP po
   int nrows = 0;
   long double ***FinalLiks, TotalLik = 0.;
 
-  FinalLiks = (long double ***) malloc (7 * sizeof (long double **));
+  FinalLiks = (long double ***) R_alloc(7, sizeof (long double **));
   for (a=0; a<7; ++a) {
-    FinalLiks[a] = (long double **) malloc (9 * sizeof (long double *));
+    FinalLiks[a] = (long double **) R_alloc(9, sizeof (long double *));
     for (b=1; b<9; ++b) {
-      FinalLiks[a][b] = (long double *) malloc (b * sizeof (long double));
+      FinalLiks[a][b] = (long double *) R_alloc(b, sizeof (long double));
       for (c=0; c<b; ++c)
         FinalLiks[a][b][c] = 0.;
     }
