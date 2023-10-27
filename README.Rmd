@@ -65,7 +65,7 @@ following the processing outlined in the background vignette, one could use
 
 ```bash
 samtools markdup -r positionsort.sam temp.sam
-./in_tryptasenew2 >> tryptase.out
+./count_tryptase >> tryptase.out
 
 cat tryptase.out | awk '{printf "./Tryplik %d %d %d %d %d | sort -nk2 | tail -n 1\n", $6, $7, $8, $9, $10}'
 ```

@@ -113,7 +113,7 @@ bib <- c(
     chovanec
 )
 
-BibOptions(max.names = 1, longnamesfirst = FALSE)
+BibOptions(max.names = 1, longnamesfirst = FALSE, cite.style = "authoryear", bibpunct = c("", "", "", "", ";", ","))
 ```
 
 <!-- # Basics -->
@@ -189,7 +189,7 @@ BibOptions(max.names = 1, longnamesfirst = FALSE)
 # Overview 
 
 We have developed a likelihood-based approach for estimating tryptase copy
-numbers (specifically the numbers of $\alpha$ alleles alleles and $\beta$
+numbers (specifically the numbers of $\alpha$ alleles, $\beta$ alleles and $\beta$
 frameshift alleles) directly from whole-genome (preferable) or whole-exome
 sequence data. The approach utilizes an updated assembly of canonical $\alpha$,
 $\beta$, and $\delta$ tryptase alleles, and identifies reads that map uniquely
@@ -257,21 +257,21 @@ example, we use publicly available high-coverage whole genome sequence data from
 the 1000 Genomes Project as a test case. We downloaded the file
 "HG00100.final.cram" from
 https://www.internationalgenome.org/data-portal/sample/HG00100 to use as an
-example. Subsetting and indexing can be performed with the following commands:
+example.Indexing and subsetting can be performed with the following commands:
 
 ```bash
-samtools view -b -o HG00100.final.bam HG00100.final.cram
-samtools index HG00100.final.bam
-samtools view HG00100.final.bam chr16:1200000-1300000 -b -h > HG00100.tryptase.bam
+samtools index HG00100.final.cram
+samtools view -b -h HG00100.final.cram chr16:1200000-1300000 > HG00100.tryptase.cram
+samtools index HG00100.tryptase.cram
 ```
 
-### Converting indexed bam files to fastq reads
+### Converting indexed cram files to fastq reads
 
 One possibility for doing this uses samtools again:
 
 ```bash
-samtools sort -n HG00100.tryptase.bam -o HG00100.tryptase.sorted.bam
-samtools fastq -1 HG00100.tryptase.R1.fastq -2 HG00100.tryptase.R2.fastq -0 /dev/null -s /dev/null -n HG00100.tryptase.sorted.bam
+samtools sort -n HG00100.tryptase.cram -o HG00100.tryptase.sorted.cram
+samtools fastq -1 HG00100.tryptase.R1.fastq -2 HG00100.tryptase.R2.fastq -0 /dev/null -s /dev/null -n HG00100.tryptase.sorted.cram
 ```
 
 ### Mapping reads to tryptase consensus sequence 
@@ -298,7 +298,7 @@ samtools markdup -r positionsort.sam temp.sam
 
 ### Counting reads mapping to specific tryptase alleles
 
-The file "in_tryptasenew2" is a shell script that counts the numbers of reads
+The file "count_tryptase.sh" is a shell script that counts the numbers of reads
 that map specifically to different tryptase alleles (see below for technical
 details). It requires the input file to be called "temp.sam". Output consists
 of $9$ integers summarizing read counts:
@@ -315,20 +315,20 @@ $\alpha$, $\beta$, or $\delta$ alleles respectively
 
 Further details on these can be found in the technical details below. For our
 example with sample HG00100 from the 1000 Genomes Project, the output of
-"in_tryptasenew2" is
+"count_tryptase" is
 
 ```bash
-29 0 25 0 27 0 382 356 357
+24    0   22    0   26    0   347   316   304
 ```
 
 ## Tryptase copy number likelihood calculations 
 
-The last five numbers from the output of "in_tryptasenew2" are used as input to
+The last five numbers from the output of "count_tryptase" are used as input to
 the program TrypLik to estimate the likelihoods of different combinations of
-total number of $\alpha$ alleles, total number of $\beta$ alleles, and total of
-$\beta$ frameshift alleles. The method accounts for dependence across read
-counts (caused by the same $2 \times 150$ bp read generally overlapping multiple
-of the regions used to distinguish between alleles) and also uses prior
+total number of $\alpha$ alleles, total number of $\beta$ alleles, and total
+number of $\beta$ frameshift alleles. The method accounts for dependence across
+read counts (caused by the same $2 \times 150$ bp read generally overlapping
+multiple of the regions used to distinguish between alleles) and also uses prior
 information on CNV frequencies in different populations. Usage is
 
 ```bash
@@ -336,19 +336,19 @@ TrypLik WT FS Areads Breads Dreads (-pop POP)
 ```
 
 `WT`: number of reads mapping to $\beta$ "wildtype" alleles at the site of the
-frameshift mutation (5th field from "in_tryptasenew2" output)
+frameshift mutation (5th field from "count_tryptase" output)
 
 `FS`: number of reads mapping to $\beta$ frameshift alleles at the site of the
-frameshift mutation (6th field from "in_tryptasenew2" output)
+frameshift mutation (6th field from "count_tryptase" output)
 
 `Areads`: number of reads mapping uniquely to $\alpha$ alleles relative to
-$\beta$ and $\delta$ alleles (7th field from "in_tryptasenew2" output)
+$\beta$ and $\delta$ alleles (7th field from "count_tryptase" output)
 
 `Breads`: number of reads mapping uniquely to $\beta$ alleles relative to
-$\alpha$ and $\delta$ alleles (8th field from "in_tryptasenew2" output)
+$\alpha$ and $\delta$ alleles (8th field from "count_tryptase" output)
 
 `Dreads`: number of reads mapping uniquely to $\delta$ alleles relative to
-$\alpha$ and $\beta$ alleles (9th field from "in_tryptasenew2" output)
+$\alpha$ and $\beta$ alleles (9th field from "count_tryptase" output)
 
 `-pop POP`: optional flag to specify the predominant ancestry of the test
 sample. Options include EUR for European ancestry, SAS for South Asian
@@ -363,20 +363,20 @@ combination’s posterior probability. To continue our example from before,
 calculation for HG00100 would use the command
 
 ```bash
-TrypLik 27 0 382 356 357 -pop EUR
+TrypLik 26 0 347 316 304 -pop EUR
 ```
 
 Output would look like this:
 
 | Alpha count | Beta count | Beta FS count | Posterior likelihood |
 |:------------|:-----------|:--------------|:---------------------|
-|      2      |      2     |       0       |       0.99985        |
-|      2      |      3     |       0       |       0.00002        |
-|      3      |      2     |       0       |       0.00011        |
-|      3      |      3     |       0       |       0.00002        |
+|      2      |      2     |       0       |       0.99890        |
+|      2      |      3     |       0       |       0.00008        |
+|      3      |      2     |       0       |       0.00082        |
+|      3      |      3     |       0       |       0.00020        |
 
 The method estimates that HG00100 has a 2$\alpha:2\beta:2\delta$ genotype
-(with no frameshift alleles) with posterior probability 99.985%.
+(with no frameshift alleles) with posterior probability 99.89%.
 
 # Technical details
 
@@ -389,14 +389,14 @@ We started by aligning cDNA sequences to a 40 bp region near the probes used by
 |   |      |
 |---|:-----|
 | Delta (CCDS10432.1) | <span class="mono">CCAGGCCAGG CCCTGCAGCA A<mark class="bgr">A</mark>CGGGCAT<mark class="bgr">T</mark> GTTGGGGG<mark class="bgr">G</mark>C</span> |
-| Alpha (M30038.1)  | <span class="mono">CCAG<mark class="bgy">T</mark>CCAGG CCCTGCAGCA AG<mark class="bgy">C</mark>GGG<mark class="bgy">T</mark>ATC GT<mark class="bgy">C</mark>GGGGGTC</span> |
+| Alpha (M30038.1)  | <span class="mono">CCAG<mark class="bgy">T</mark>CCAGG CCCTGCAGC<mark class="bgy">A</mark> AG<mark class="bgy">C</mark>GGG<mark class="bgy">T</mark>ATC GT<mark class="bgy">C</mark>GGGGGTC</span> |
 | Beta1 (M33492.1)   | <span class="mono">CCAG<mark class="bgy">G</mark>CCAGG CCCTGCAGC<mark class="bgy">G</mark> AG<mark class="bgy">T</mark>GGG<mark class="bgy">C</mark>ATC GT<mark class="bgy">C</mark>GGGGGTC</span> | 
 | Beta2 (BC065923.1)  | <span class="mono">CCAG<mark class="bgy">G</mark>CCAGG CCCTGCAGC<mark class="bgy">G</mark> AG<mark class="bgy">T</mark>GGG<mark class="bgy">C</mark>ATC GT<mark class="bgy">T</mark>GGGGGTC</span> |
-| Beta3 (AF099143)  | <span class="mono">CCAG<mark class="bgy">G</mark>CCAGG CCCTG<mark class="bgy">C</mark>AGC<mark class="bgy">G</mark> AG<mark class="bgy">T</mark>GGG<mark class="bgy">C</mark>ATC GT<mark class="bgy">T</mark>GGGGGTC</span> |
+| Beta3 (AF099143)  | <span class="mono">CCAG<mark class="bgy">G</mark>CCAGG CCCTGCAGC<mark class="bgy">G</mark> AG<mark class="bgy">T</mark>GGG<mark class="bgy">C</mark>ATC GT<mark class="bgy">T</mark>GGGGGTC</span> |
 </div>
 
 Here sites in red are fixed differences between TPSD1 and (TPSAB1+TPSB2), while
-sites in yellow can be used to distinguish $\langle \alpha$, $\beta$I, and
+sites in yellow can be used to distinguish $\alpha$, $\beta$I, and
 $\beta$II/$\beta$III alleles from each other. $\beta$II and $\beta$III alleles
 are distinguishable from each other at sites near the `r AutoCite(lyons)` REV
 primer as follows:
@@ -527,10 +527,10 @@ $2(0.1766)(1-0.1766)$. Assuming the estimated tryptase CNV genotype is correct,
 we calculate
 
 $$
- \textrm{Pr} \bigl(\textrm{data}\ |\ \beta\textrm{III}^{FS}\, \textrm{heterozygote}\bigr) = \binom{64}{28} (0.25)^{28}(0.75)^{36},\ \textrm{and}
+ \textrm{Pr} \bigl(\textrm{data}\ |\ \beta\textrm{III}^{FS}\, \textrm{heterozygote}\bigr) = {64 \choose 28} (0.25)^{28}(0.75)^{36},\ \textrm{and}
 $$
 $$
- \textrm{Pr} \bigl(\textrm{data}\ |\ \beta\textrm{III}^{FS}\, \textrm{homozygote}\bigr) = \binom{64}{28} (0.5)^{28} (0.5)^{36}
+ \textrm{Pr} \bigl(\textrm{data}\ |\ \beta\textrm{III}^{FS}\, \textrm{homozygote}\bigr) = {64 \choose 28} (0.5)^{28} (0.5)^{36}
 $$
 
 and 
@@ -610,10 +610,10 @@ calculate
 
 $$
 \begin{align}
-&\textrm{Pr}\left(2A/D \approx 1.324\ \&\&\ 2B/D \approx 4.138 | \textrm{true genotype is } 1\alpha:3\beta:2\delta\right) \approx \\
-&\textrm{Pr}\left(2A/D \approx 1.324\ \&\&\ 2B/D \approx 4.138 | 393 \textrm{ independent reads are simulated from a}\right. \\
-&\textrm{multinomial distribution with relative probabilities of } 1.06, 3.13 \textrm{ and } 2 \textrm{for} \alpha, \beta, \\
-&\left.\textrm{and} \delta \textrm{ reads respectively}\right)
+&\textrm{Pr}\left(2A/D \approx 1.324\ \&\&\ 2B/D \approx 4.138\ |\ \textrm{true genotype is } 1\alpha:3\beta:2\delta\right) \approx \\
+&\textrm{Pr}\left(2A/D \approx 1.324\ \&\&\ 2B/D \approx 4.138\ |\ 393 \textrm{ independent reads are simulated from a}\right. \\
+&\textrm{multinomial distribution with relative probabilities of } 1.06, 3.13 \textrm{ and } 2 \textrm{ for } \alpha, \beta, \\
+&\left.\textrm{ and } \delta \textrm{ reads respectively}\right)
 \end{align}
 $$
 These are actually approximate likelihoods; operationally, $2A/D \approx 1.324$

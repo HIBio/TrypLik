@@ -1,15 +1,9 @@
 #!/bin/bash
 
-set -e -u -o pipefail -o noclobber
-
-cat temp.sam | grep CTGCAGC[A]AG[C]GGG[T]ATCGT[C]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGC
-CCTGGCAGGTGAGCCTGAGAGTCC[G]CG[A]CC[G] | wc | awk '{print $1}' > temp1a
-cat temp.sam | grep CTGCAGC[G]AG[T]GGG[C]ATCGT[C]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGC
-CCTGGCAGGTGAGCCTGAGAGTCC[A]CG[G]CC[C] | wc | awk '{print $1}' > temp1b
-cat temp.sam | grep CTGCAGC[G]AG[T]GGG[C]ATCGT[T]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGC
-CCTGGCAGGTGAGCCTGAGAGTCC[A]CG[G]CC[C] | wc | awk '{print $1}' > temp1c
-cat temp.sam | grep CTGCAGC[G]AG[T]GGG[C]ATCGT[T]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGC
-CCTGGCAGGTGAGCCTGAGAGTCC[G]CG[A]CC[G] | wc | awk '{print $1}' > temp1d
+cat temp.sam | grep CTGCAGC[A]AG[C]GGG[T]ATCGT[C]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGCCCTGGCAGGTGAGCCTGAGAGTCC[G]CG[A]CC[G] | wc | awk '{print $1}' > temp1a
+cat temp.sam | grep CTGCAGC[G]AG[T]GGG[C]ATCGT[C]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGCCCTGGCAGGTGAGCCTGAGAGTCC[A]CG[G]CC[C] | wc | awk '{print $1}' > temp1b
+cat temp.sam | grep CTGCAGC[G]AG[T]GGG[C]ATCGT[T]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGCCCTGGCAGGTGAGCCTGAGAGTCC[A]CG[G]CC[C] | wc | awk '{print $1}' > temp1c
+cat temp.sam | grep CTGCAGC[G]AG[T]GGG[C]ATCGT[T]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGCCCTGGCAGGTGAGCCTGAGAGTCC[G]CG[A]CC[G] | wc | awk '{print $1}' > temp1d
 
 cat temp.sam | grep CCAGTCCAGGCCCTGCAGCAAGCGGGTATC > temp1
 cat temp.sam | grep C[AG]GGGCCTGGAGGGGTGGGCAAGGGCTGGA >> temp1
@@ -55,7 +49,7 @@ cat temp.sam | grep TGCAGGCGGGCGTGGTCAGCTGGGAGGAGA >> temp1
 cat temp1 | wc | awk '{print $1}' > temp1i
 
 # use `paste -s -` on mac
-cat temp1[abcdefghi] | paste -s
+cat temp1[abcdefghi] | paste -s -
 rm temp[12]*
 
 exit 0
