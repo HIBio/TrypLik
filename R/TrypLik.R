@@ -12,6 +12,26 @@
 #'
 #' @export
 TrypLik <- function(wt, fs, areads, breads, dreads, pop = 0) {
+
+  if (length(wt) > 1) {
+    inputs <- wt
+    if (length(inputs) == 9) {
+      wt <- inputs[5]
+      fs <- inputs[6]
+      areads <- inputs[7]
+      breads <- inputs[8]
+      dreads <- inputs[9]
+    } else if (length(inputs) == 5) {
+      wt <- inputs[1]
+      fs <- inputs[2]
+      areads <- inputs[3]
+      breads <- inputs[4]
+      dreads <- inputs[5]
+    } else {
+      stop("Unrecognised input format")
+    }
+  }
+
   pop <- select_population(pop)
   .Call("C_tryplik",
         as.integer(wt), as.integer(fs),

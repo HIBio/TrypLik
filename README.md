@@ -35,7 +35,7 @@ And the development version from
 BiocManager::install("HIBio/TrypLik")
 ```
 
-## Example
+## Preprocessing
 
 Provided the sequencing data has been processed (see the background
 vignette included in this package, and accompanying shell scripts in
@@ -45,12 +45,12 @@ can be provided to the `TrypLik` function
 ``` r
 library("TrypLik")
 
-TrypLik(27, 0, 382, 356, 357)
+TrypLik(26, 0, 347, 316, 304)
 #>   Alpha_count Beta_count Beta_FS_count Posterior_likelihood
-#> 1           2          2             0              0.99985
-#> 2           2          3             0              0.00002
-#> 3           3          2             0              0.00011
-#> 4           3          3             0              0.00002
+#> 1           2          2             0              0.99890
+#> 2           2          3             0              0.00008
+#> 3           3          2             0              0.00082
+#> 4           3          3             0              0.00020
 ```
 
 This function is an R wrapper for the C function, producing a native
@@ -66,11 +66,66 @@ pipeline; following the processing outlined in the background vignette,
 one could use
 
 ``` bash
+[...]
 samtools markdup -r positionsort.sam temp.sam
 ./count_tryptase >> tryptase.out
 
 cat tryptase.out | awk '{printf "./Tryplik %d %d %d %d %d | sort -nk2 | tail -n 1\n", $6, $7, $8, $9, $10}'
 ```
+
+The processing can be entirely performed from R, provided that both
+`samtools` and `bwa` are installed. To preprocess the file
+`HG00100.final.cram` from 1000 Genomes, producing a `.sam` file suitable
+for counting
+
+``` r
+sam_file <- preprocess("HG00100.final.cram")
+# Processing... this may take some time
+# [bwa_index] Pack FASTA... 0.00 sec
+# [bwa_index] Construct BWT for the packed sequence...
+# [bwa_index] 0.00 seconds elapse.
+# [bwa_index] Update BWT... 0.00 sec
+# [bwa_index] Pack forward-only FASTA... 0.00 sec
+# [bwa_index] Construct SA from BWT and Occ... 0.00 sec
+# [main] Version: 0.7.17-r1188
+# [main] CMD: bwa index consensus.fa
+# [main] Real time: 0.004 sec; CPU: 0.004 sec
+# [M::bam2fq_mainloop] discarded 228 singletons
+# [M::bam2fq_mainloop] processed 27228 reads
+# [M::bwa_idx_load_from_disk] read 0 ALT contigs
+# [M::process] read 27000 sequences (4050000 bp)...
+# [M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (0, 1190, 0, 0)
+# [M::mem_pestat] skip orientation FF as there are not enough pairs
+# [M::mem_pestat] analyzing insert size distribution for orientation FR...
+# [M::mem_pestat] (25, 50, 75) percentile: (348, 429, 530)
+# [M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 894)
+# [M::mem_pestat] mean and std.dev: (422.49, 140.29)
+# [M::mem_pestat] low and high boundaries for proper pairs: (1, 1076)
+# [M::mem_pestat] skip orientation RF as there are not enough pairs
+# [M::mem_pestat] skip orientation RR as there are not enough pairs
+# [M::mem_process_seqs] Processed 27000 reads in 1.101 CPU sec, 1.064 real sec
+# [main] Version: 0.7.17-r1188
+# [main] CMD: bwa mem consensus.fa tempR1.fastq tempR2.fastq
+# [main] Real time: 1.097 sec; CPU: 1.133 sec
+# result file temp.sam is here: temp.sam
+
+sam_file
+# [1] "temp.sam"
+
+counts <- count_tryptase(sam_file)
+counts
+# [1]  24   0  22   0  26   0 347 316 304
+
+TrypLik(counts)
+#   Alpha_count Beta_count Beta_FS_count Posterior_likelihood
+# 1           2          2             0              0.99890
+# 2           2          3             0              0.00008
+# 3           3          2             0              0.00082
+# 4           3          3             0              0.00020
+```
+
+(the `TrypLik` function takes either a single vector of counts or values
+provided to specific arguments).
 
 ## Citation
 
