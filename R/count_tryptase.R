@@ -11,6 +11,7 @@ preprocess <- function(cram_file) {
   script <- system.file("preprocess_single.sh", package = "TrypLik")
   Sys.chmod(script)
   message("Processing... this may take some time")
+  file.copy(system.file("consensus.fa", package = "TrypLik"), file.path(wd, "consensus.fa"), overwrite = TRUE)
   system2(script, cram_file)
   sam_file <- file.path(wd, "temp.sam")
   message("result file temp.sam is here: ", sam_file)
