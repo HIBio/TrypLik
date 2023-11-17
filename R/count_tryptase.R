@@ -1,3 +1,9 @@
+#' Run preprocessing script
+#'
+#' @param cram_file file path of .cram file to be processed
+#'
+#' @return produces a temp.sam file
+#' @export
 preprocess <- function(cram_file) {
   wd <- dirname(cram_file)
   oldwd <- setwd(wd)
