@@ -33,8 +33,9 @@ knitr::opts_chunk$set(
 )
 
 required <- c("ggplot2")
-if (!all(unlist(lapply(required, function(pkg) requireNamespace(pkg, quietly = TRUE)))))
-  knitr::opts_chunk$set(eval = FALSE)
+if (!all(unlist(lapply(required, function(pkg) requireNamespace(pkg, quietly = TRUE))))) {
+    knitr::opts_chunk$set(eval = FALSE)
+}
 ```
 
 ```{r vignetteSetup, echo=FALSE, message=FALSE, warning = FALSE}
@@ -45,54 +46,58 @@ startTime <- Sys.time()
 library("RefManageR")
 
 lyons <- bibentry(
-  bibtype = "Article", 
-  author = c(person(given = "Jonathan", middle = "J", family = "Lyons et al.")),
-  title = "Elevated basal serum tryptase identifies a multisystem disorder associated with increased TPSAB1 copy number.",
-  journal = "Nat Genet.",
-  year = "2016", 
-  volume = "48(12)",
-  pages = "1564-1569", 
-  doi = "doi:10.1038/ng.3696"
+    bibtype = "Article",
+    author = c(person(given = "Jonathan", middle = "J", family = "Lyons et al.")),
+    title = "Elevated basal serum tryptase identifies a multisystem disorder associated with increased TPSAB1 copy number.",
+    journal = "Nat Genet.",
+    year = "2016",
+    volume = "48(12)",
+    pages = "1564-1569",
+    doi = "doi:10.1038/ng.3696"
 )
 maun <- bibentry(
-  bibtype = "Article",
-  author = c(person(given = "Henry", middle = "R", family = "Maun et al.")),
-  title = "An Allosteric Anti-tryptase Antibody for the Treatment of Mast Cell-Mediated Severe Asthma",
-  journal = "Cell",
-  year = "2019",
-  volume = "179(2)",
-  pages = "417-431",
-  doi = "doi:10.1016/j.cell.2019.09.009"
+    bibtype = "Article",
+    author = c(person(given = "Henry", middle = "R", family = "Maun et al.")),
+    title = "An Allosteric Anti-tryptase Antibody for the Treatment of Mast Cell-Mediated Severe Asthma",
+    journal = "Cell",
+    year = "2019",
+    volume = "179(2)",
+    pages = "417-431",
+    doi = "doi:10.1016/j.cell.2019.09.009"
 )
 glover <- bibentry(
-  bibtype = "Article",
-  author = c(person(given = "Sarah", middle = "C", family = "Glover"),
-             person(given = "Alexander", family = "Carlyle"),
-             person(given = "Jonathan", middle = "J", family = "Lyons")),
-  title = "Hereditary alpha-tryptasemia despite normal tryptase-encoding gene copy number owing to copy number loss in trans",
-  journal = "Annals of Allergy, Asthma & Immunology",
-  year = "2022",
-  volume = "128(4)",
-  pages = "460-461",
-  doi = "10.1016/j.anai.2021.12.008"
+    bibtype = "Article",
+    author = c(
+        person(given = "Sarah", middle = "C", family = "Glover"),
+        person(given = "Alexander", family = "Carlyle"),
+        person(given = "Jonathan", middle = "J", family = "Lyons")
+    ),
+    title = "Hereditary alpha-tryptasemia despite normal tryptase-encoding gene copy number owing to copy number loss in trans",
+    journal = "Annals of Allergy, Asthma & Immunology",
+    year = "2022",
+    volume = "128(4)",
+    pages = "460-461",
+    doi = "10.1016/j.anai.2021.12.008"
 )
 chollet <- bibentry(
-  bibtype = "Article",
-  author = c(person(given = "Madeleine", middle = "B", family = "Chollet"),
-             person(given = "Anna", family = "Kovalszki"),
-             person(given = "Cem", family = "Akin")),
-  title = "A novel case of beta-tryptase/TPSB2 allele duplication",
-  journal = "Journal of Allergy and Clinical Immunology",
-  year = "2021",
-  volume = "147(2) supplement",
-  doi = "10.1016/j.jaci.2020.12.491"
+    bibtype = "Article",
+    author = c(
+        person(given = "Madeleine", middle = "B", family = "Chollet"),
+        person(given = "Anna", family = "Kovalszki"),
+        person(given = "Cem", family = "Akin")
+    ),
+    title = "A novel case of beta-tryptase/TPSB2 allele duplication",
+    journal = "Journal of Allergy and Clinical Immunology",
+    year = "2021",
+    volume = "147(2) supplement",
+    doi = "10.1016/j.jaci.2020.12.491"
 )
 chovanec <- bibentry(
-  bibtype = "Unpublished",
-  author = "Chovanec",
-  title = "Unpublished data",
-  note = "TBA",
-  year = "2022"
+    bibtype = "Unpublished",
+    author = "Chovanec",
+    title = "Unpublished data",
+    note = "TBA",
+    year = "2022"
 )
 
 ## Write bibliography information
@@ -598,10 +603,10 @@ data("genomes", package = "TrypLik")
 
 library(ggplot2)
 
-ggplot(genomes, aes(`2A/D`, `2B/D`, col = `Geno Group`)) + 
-  geom_point() +
-  theme_bw() +
-  theme(text = element_text(size = 16))
+ggplot(genomes, aes(`2A/D`, `2B/D`, col = `Geno Group`)) +
+    geom_point() +
+    theme_bw() +
+    theme(text = element_text(size = 16))
 ```
 
 We focus on the dots colored green, which are estimated to have a tryptase

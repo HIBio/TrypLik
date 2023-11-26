@@ -41,6 +41,7 @@ And the development version from [GitHub](https://github.com/HIBio/TrypLik) with
 ```{r 'install_dev', eval = FALSE}
 BiocManager::install("HIBio/TrypLik")
 ```
+
 ## Preprocessing
 
 Provided the sequencing data has been processed (see the background vignette
@@ -131,14 +132,18 @@ Below is the citation output from using `citation('TrypLik')` in R. Please
 run this yourself to check for any updates on how to cite __TrypLik__.
 
 ```{r 'citation', eval = requireNamespace('TrypLik')}
-print(citation('TrypLik'), bibtex = TRUE)
+print(citation("TrypLik"), bibtex = TRUE)
 ```
 
-Please note that the `TrypLik` was only made possible thanks to many other R and bioinformatics software authors, which are cited either in the vignettes and/or the paper(s) describing this package.
+Please note that the `TrypLik` was only made possible thanks to many other R and
+bioinformatics software authors, which are cited either in the vignettes and/or
+the paper(s) describing this package.
 
 ## Code of Conduct
 
-Please note that the `TrypLik` project is released with a [Contributor Code of Conduct](http://bioconductor.org/about/code-of-conduct/). By contributing to this project, you agree to abide by its terms.
+Please note that the `TrypLik` project is released with a [Contributor Code of
+Conduct](http://bioconductor.org/about/code-of-conduct/). By contributing to
+this project, you agree to abide by its terms.
 
 ## Development tools
 
@@ -148,7 +153,7 @@ Please note that the `TrypLik` project is released with a [Contributor Code of C
 * The code is styled automatically thanks to `r BiocStyle::CRANpkg('styler')`.
 * The documentation is formatted thanks to `r BiocStyle::CRANpkg('devtools')` and `r BiocStyle::CRANpkg('roxygen2')`.
 
-For more details, check the `dev` directory.
+<!-- For more details, check the `dev` directory. -->
 
 This package was developed using `r BiocStyle::Biocpkg('biocthis')`.
 

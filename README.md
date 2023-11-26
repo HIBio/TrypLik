@@ -134,7 +134,7 @@ Please run this yourself to check for any updates on how to cite
 **TrypLik**.
 
 ``` r
-print(citation('TrypLik'), bibtex = TRUE)
+print(citation("TrypLik"), bibtex = TRUE)
 #> Warning in citation("TrypLik"): no date field in DESCRIPTION file of package
 #> 'TrypLik'
 #> Warning in citation("TrypLik"): could not determine year for 'TrypLik' from
@@ -186,7 +186,7 @@ contributing to this project, you agree to abide by its terms.
   *[devtools](https://CRAN.R-project.org/package=devtools)* and
   *[roxygen2](https://CRAN.R-project.org/package=roxygen2)*.
 
-For more details, check the `dev` directory.
+<!-- For more details, check the `dev` directory. -->
 
 This package was developed using
 *[biocthis](https://bioconductor.org/packages/3.16/biocthis)*.
