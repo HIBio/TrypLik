@@ -284,6 +284,8 @@ map to tryptase genes. The following command works for our continuing example:
 bwa mem consensus.fa HG00100.tryptase.R1.fastq HG00100.tryptase.R2.fastq > out.sam
 ```
 
+The file `consensus.fa` is included with this package in [inst/consensus.fa](inst/consensus.fa).
+
 ### Removing duplicates
 
 This is generally done using Picard or samtools. Here is an example of doing so
@@ -604,6 +606,13 @@ ggplot(genomes, aes(`2A/D`, `2B/D`, col = `Geno Group`)) +
     geom_point() +
     theme_bw() +
     theme(text = element_text(size = 16))
+```
+
+The source for this data is available to an R session with `tryptase_1KG()`
+
+```{r}
+head(tryptase_1KG())
+tail(tryptase_1KG())
 ```
 
 We focus on the dots colored green, which are estimated to have a tryptase
