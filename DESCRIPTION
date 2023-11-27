@@ -3,14 +3,17 @@ Type: Package
 Title: Calculates Tryptase Variant Likelihoods
 Version: 0.1.0
 Authors@R: c(
- person("Jonathan", "Carroll", email = "jonathan@hibio.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1404-5264")),
+ person("Jonathan", "Carroll", email = "rpkg@jcarroll.com.au", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1404-5264")),
  person("Jeff", "Wall", email = "jeffwall.genetics@gmail.com", role = c("aut")),
  person("Human Immunology Biosciences (HI·Bio)", role = c("cph", "fnd"))
  )
-Description: Calculates tryptase variant likelihoods based on counts.
+Description: Calculates tryptase variant (alpha, beta) likelihoods based on counts using a wrapped C method. 
+    Preprocessing of cram files is provided as both bash scripts and R wrappers. A detailed description of 
+    the method employed is provided as a vignette. Contact HIBio to learn more about our tryptase program 
+    and services provided.
+biocViews: SequenceMatching, Alignment, Sequencing, Genetics, VariantDetection
 License: file LICENSE
 Encoding: UTF-8
-LazyData: true
 RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 Suggests: 
@@ -20,7 +23,11 @@ Suggests:
     RefManageR,
     rmarkdown,
     sessioninfo,
-    testthat
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)
+Imports: 
+    stats,
+    utils
+Config/testthat/edition: 3

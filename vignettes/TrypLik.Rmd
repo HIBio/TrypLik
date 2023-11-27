@@ -31,11 +31,6 @@ knitr::opts_chunk$set(
     comment = "#>",
     crop = NULL ## Related to https://stat.ethz.ch/pipermail/bioc-devel/2020-April/016656.html
 )
-
-required <- c("ggplot2")
-if (!all(unlist(lapply(required, function(pkg) requireNamespace(pkg, quietly = TRUE))))) {
-    knitr::opts_chunk$set(eval = FALSE)
-}
 ```
 
 ```{r vignetteSetup, echo=FALSE, message=FALSE, warning = FALSE}
@@ -329,11 +324,18 @@ example with sample HG00100 from the 1000 Genomes Project, the output of
 The above processing can be performed in R (provided samtools and bwa are
 available) with the following wrappers
 
+```{r, echo = FALSE}
+library(TrypLik)
+counts <- c(24L, 0L, 22L, 0L, 26L, 0L, 347L, 316L, 304L)
+```
+
 ```r
 sam_file <- preprocess("HG00100.final.cram")
 counts <- count_tryptase(sam_file)
+```
+
+```{r}
 counts
-# [1]  24   0  22   0  26   0 347 316 304
 ```
 
 ## Tryptase copy number likelihood calculations 
@@ -396,13 +398,8 @@ The method estimates that HG00100 has a 2$\alpha:2\beta:2\delta$ genotype
 An R wrapper for this function is provided, which takes either a single vector of 
 values or individual arguments
 
-```r
+```{r}
 TrypLik(counts)
-#   Alpha_count Beta_count Beta_FS_count Posterior_likelihood
-# 1           2          2             0              0.99890
-# 2           2          3             0              0.00008
-# 3           3          2             0              0.00082
-# 4           3          3             0              0.00020
 
 # or TrypLik(26, 0, 347, 316, 304, pop = 0)
 ```
@@ -598,8 +595,8 @@ We use empirical data from the EUR populations from the 1000 Genomes Project to
 estimate these correction factors. First, we plotted $2A/D$ vs. $2B/D$ for these $503$
 samples:
 
-```{r, genomes, class.source="fold-hide"}
-data("genomes", package = "TrypLik")
+```{r, genomes, class.source="fold-hide", eval = requireNamespace("ggplot2")}
+genomes <- TrypLik::tryptase_1KG()
 
 library(ggplot2)
 
@@ -1050,4 +1047,10 @@ Citations made with `r CRANpkg("RefManageR")` `r Citep(bib[["RefManageR"]])`.
 ```{r vignetteBiblio, results = "asis", echo = FALSE, warning = FALSE, message = FALSE}
 ## Print bibliography
 PrintBibliography(bib, .opts = list(hyperlink = "to.doc", style = "html", max.names = 3))
+```
+
+# Session Info
+
+```{r, session_info}
+utils::sessionInfo()
 ```

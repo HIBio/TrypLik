@@ -15,3 +15,10 @@ produces a temp.sam file
 \description{
 Run preprocessing script
 }
+\examples{
+tryCatch(preprocess("missing_file.cram"), error = function(e) e)
+
+\dontrun{
+preprocess("HG00100.final.cram")
+}
+}

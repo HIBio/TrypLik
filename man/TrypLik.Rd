@@ -21,8 +21,19 @@ TrypLik(wt, fs, areads, breads, dreads, pop = 0)
 or character string}
 }
 \value{
-a \code{data.frame}
+a \code{data.frame} containing probabilities of the relevant likelihoods
 }
 \description{
 Calculate Tryptase Variant Likelihoods
+}
+\examples{
+# as individual arguments
+TrypLik(26, 0, 347, 316, 304, pop = 0)
+
+# as a `counts` vector
+TrypLik(c(26, 0, 347, 316, 304), pop = 0)
+
+# as the output of `preprocess`
+TrypLik(c(24, 0, 22, 0, 26, 0, 347, 316, 304), pop = 0)
+
 }

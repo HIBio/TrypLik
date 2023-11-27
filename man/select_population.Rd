@@ -10,6 +10,17 @@ select_population(pop = NULL)
 \item{pop}{population to use (0=EUR, 1=AFR, 2=EAS, 3=SAS) as either a number
 or character string}
 }
+\value{
+a named integer mapping the population name to the index
+}
 \description{
 Select a genetic-ancestry population
+}
+\examples{
+# by index
+select_population(pop = 0)
+
+# by name
+select_population(pop = "EUR")
+
 }

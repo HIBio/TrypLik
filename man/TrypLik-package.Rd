@@ -6,10 +6,10 @@
 \alias{_PACKAGE}
 \title{TrypLik: Calculates Tryptase Variant Likelihoods}
 \description{
-Calculates tryptase variant likelihoods based on counts.
+Calculates tryptase variant (alpha, beta) likelihoods based on counts using a wrapped C method. Preprocessing of cram files is provided as both bash scripts and R wrappers. A detailed description of the method employed is provided as a vignette. Contact HIBio to learn more about our tryptase program and services provided.
 }
 \author{
-\strong{Maintainer}: Jonathan Carroll \email{jonathan@hibio.com} (\href{https://orcid.org/0000-0002-1404-5264}{ORCID})
+\strong{Maintainer}: Jonathan Carroll \email{rpkg@jcarroll.com.au} (\href{https://orcid.org/0000-0002-1404-5264}{ORCID})
 
 Authors:
 \itemize{

@@ -166,17 +166,13 @@ contributing to this project, you agree to abide by its terms.
 
 ## Development tools
 
-- Continuous code testing is possible thanks to [GitHub
-  actions](https://www.tidyverse.org/blog/2020/04/usethis-1-6-0/)
-  through *[usethis](https://CRAN.R-project.org/package=usethis)*,
+- Package development is possible thanks to
+  *[usethis](https://CRAN.R-project.org/package=usethis)*,
   *[remotes](https://CRAN.R-project.org/package=remotes)*, and
   *[rcmdcheck](https://CRAN.R-project.org/package=rcmdcheck)* customized
   to use [Bioconductor’s docker
   containers](https://www.bioconductor.org/help/docker/) and
   *[BiocCheck](https://bioconductor.org/packages/3.16/BiocCheck)*.
-- Code coverage assessment is possible thanks to
-  [codecov](https://codecov.io/gh) and
-  *[covr](https://CRAN.R-project.org/package=covr)*.
 - The [documentation website](http://HIBio.github.io/TrypLik) is
   automatically updated thanks to
   *[pkgdown](https://CRAN.R-project.org/package=pkgdown)*.

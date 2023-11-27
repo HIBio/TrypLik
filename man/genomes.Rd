@@ -20,11 +20,16 @@ A data frame with 503 rows and 3 columns:
 \url{https://www.internationalgenome.org/1000-genomes-summary/}
 }
 \usage{
-genomes
+data(genomes)
 }
 \description{
 A subset of 503 samples from the 1000 Genomes Project, processed
 for tryptase allele counts. See the background vignette of \code{TrypLik}
 for additional details.
+}
+\examples{
+data(genomes)
+head(genomes)
+
 }
 \keyword{datasets}
