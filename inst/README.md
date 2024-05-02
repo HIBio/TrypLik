@@ -2,6 +2,7 @@
 
 The following files are included in this package's `inst/` directory:
 
+* [tryplik.c](tryplik.c): C source (without R compatible additions)
 * [consensus.fa](consensus.fa): Manually compiled consensus file based on the [supplemental data][consensus] of [Maun et al. 2019][maun2019]
 * [count_tryptase.sh](count_tryptase.sh): bash script to count tryptase alleles in the pre-processed `temp.sam` file. An R version of this is available as `count_tryptase()`
 * [evaluate.sh](evaluate.sh): bash script to run a compiled `TrypLik` C program with inputs taken from `tryptase.out`, produced via pre-processing
