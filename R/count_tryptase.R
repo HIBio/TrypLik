@@ -24,7 +24,7 @@ preprocess <- function(cram_file) {
       overwrite = TRUE
     )
     tc <- tryCatch(system2(script, cram_file), error = function(e) e)
-    if (tc == 1) stop("Preprocessing bash cript encountered an issue, exiting.")
+    if (tc == 1) stop("Preprocessing bash script encountered an issue, exiting.")
     sam_file <- file.path(wd, "temp.sam")
     message("result file temp.sam is here: ", sam_file)
     sam_file
