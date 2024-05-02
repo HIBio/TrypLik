@@ -17,22 +17,27 @@ sequence data.
 ## Installation instructions
 
 Get the latest stable `R` release from
-[CRAN](http://cran.r-project.org/). Then install `TrypLik` from
-[Bioconductor](http://bioconductor.org/) using the following code:
+[CRAN](http://cran.r-project.org/).
 
-``` r
-if (!requireNamespace("BiocManager", quietly = TRUE)) {
-    install.packages("BiocManager")
-}
+<!-- Then install `TrypLik` from [Bioconductor](http://bioconductor.org/) using the following code: -->
+<!-- ```{r 'install', eval = FALSE} -->
+<!-- if (!requireNamespace("BiocManager", quietly = TRUE)) { -->
+<!--     install.packages("BiocManager") -->
+<!-- } -->
+<!-- BiocManager::install("TrypLik") -->
+<!-- ``` -->
 
-BiocManager::install("TrypLik")
-```
-
-And the development version from
+Install the development version from
 [GitHub](https://github.com/HIBio/TrypLik) with:
 
 ``` r
 BiocManager::install("HIBio/TrypLik")
+```
+
+or, if not using the Bioconductor ecosystem:
+
+``` r
+remotes::install_github("HIBio/TrypLik")
 ```
 
 ## Preprocessing
@@ -56,9 +61,10 @@ TrypLik(26, 0, 347, 316, 304)
 This function is an R wrapper for the C function, producing a native
 `data.frame`.
 
-The C code is provided as a standalone source file in `inst/tryplik.c`
-in which the R-related code has been commented out. The R wrapper uses
-the file `src/tryplik.c` which only differs in the additional R
+The C code is provided as a standalone source file in
+[`inst/tryplik.c`](inst/tryplik.c) in which the R-related code has been
+commented out. The R wrapper uses the file
+[`src/tryplik.c`](src/tryplik.c) which only differs in the additional R
 components.
 
 Once compiled, the standalone version can be used in a command-line
