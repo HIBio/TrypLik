@@ -31,3 +31,4 @@ Imports:
     stats,
     utils
 Config/testthat/edition: 3
+URL: https://hibio.github.io/TrypLik/
