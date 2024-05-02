@@ -8,6 +8,13 @@
 \description{
 Calculates tryptase variant (alpha, beta) likelihoods based on counts using a wrapped C method. Preprocessing of cram files is provided as both bash scripts and R wrappers. A detailed description of the method employed is provided as a vignette. Contact HIBio to learn more about our tryptase program and services provided.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://hibio.github.io/TrypLik/}
+}
+
+}
 \author{
 \strong{Maintainer}: Jonathan Carroll \email{rpkg@jcarroll.com.au} (\href{https://orcid.org/0000-0002-1404-5264}{ORCID})
 
