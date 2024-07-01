@@ -4,7 +4,12 @@
 \alias{preprocess}
 \title{Run preprocessing script}
 \usage{
-preprocess(cram_file)
+preprocess(
+  cram_file,
+  output_dir = dirname(cram_file),
+  consensus_dir = system.file(package = "TrypLik"),
+  nthreads = 8
+)
 }
 \arguments{
 \item{cram_file}{file path of .cram file to be processed}

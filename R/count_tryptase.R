@@ -10,24 +10,30 @@
 #' \dontrun{
 #' preprocess("HG00100.final.cram")
 #' }
-preprocess <- function(cram_file) {
-    stopifnot(file.exists(cram_file))
-    wd <- dirname(cram_file)
-    oldwd <- setwd(wd)
-    on.exit(setwd(oldwd))
-    script <- system.file("preprocess_single.sh", package = "TrypLik")
-    Sys.chmod(script)
-    message("Processing... this may take some time")
-    file.copy(
-      system.file("consensus.fa", package = "TrypLik"),
-      file.path(wd, "consensus.fa"),
-      overwrite = TRUE
-    )
-    tc <- tryCatch(system2(script, cram_file), error = function(e) e)
-    if (tc == 1) stop("Preprocessing bash script encountered an issue, exiting.")
-    sam_file <- file.path(wd, "temp.sam")
-    message("result file temp.sam is here: ", sam_file)
-    sam_file
+preprocess <- function(cram_file,
+                       output_dir = dirname(cram_file),
+                       consensus_dir = system.file(package = "TrypLik"),
+                       nthreads = 8
+) {
+  stopifnot(file.exists(cram_file))
+  wd <- output_dir
+  bname <- basename(cram_file)
+  oldwd <- getwd()
+  on.exit(setwd(oldwd))
+  script <- system.file("preprocess_single.sh", package = "TrypLik")
+  Sys.chmod(script)
+  message("Processing... this may take some time")
+  ## ensure homebrew paths are respected
+  if (!grepl("homebrew", Sys.getenv("PATH"))) {
+    Sys.setenv(PATH = paste(Sys.getenv("PATH"), "/opt/homebrew/bin", sep = ":"))
+  }
+  tc <- tryCatch(
+    system2(script, args = c(cram_file, output_dir, consensus_dir, nthreads)),
+    error = function(e) e)
+  if (tc == 1) stop("Preprocessing bash script encountered an issue, exiting.")
+  newfile <- normalizePath(file.path(output_dir, sub(".cram", ".sam", bname, fixed = TRUE)))
+  message("result file temp.sam is here: ", newfile)
+  invisible(newfile)
 }
 
 #' Count Tryptase Alleles in a .sam File
@@ -50,26 +56,27 @@ preprocess <- function(cram_file) {
 #' count_tryptase("temp.sam")
 #' }
 count_tryptase <- function(sam_file) {
-    sam <- readLines(sam_file)
+  sam <- readLines(sam_file)
 
-    a <- count_a(sam)
-    b <- count_b(sam)
-    c <- count_c(sam)
-    d <- count_d(sam)
-    e <- count_e(sam)
-    f <- count_f(sam)
-    g <- count_g(sam)
-    h <- count_h(sam)
-    i <- count_i(sam)
+  a <- count_a(sam)
+  b <- count_b(sam)
+  c <- count_c(sam)
+  d <- count_d(sam)
+  e <- count_e(sam)
+  f <- count_f(sam)
+  g <- count_g(sam)
+  h <- count_h(sam)
+  i <- count_i(sam)
 
-    c(a, b, c, d, e, f, g, h, i)
+  c(a, b, c, d, e, f, g, h, i)
 }
 
 count_a <- function(sam) {
   length(
     grep(
       r"(CTGCAGC[A]AG[C]GGG[T]ATCGT[C]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGCCCTGGCAGGTGAGCCTGAGAGTCC[G]CG[A]CC[G])",
-      sam
+      sam,
+      perl = TRUE
     )
   )
 }
@@ -78,7 +85,8 @@ count_b <- function(sam) {
   length(
     grep(
       r"(CTGCAGC[G]AG[T]GGG[C]ATCGT[C]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGCCCTGGCAGGTGAGCCTGAGAGTCC[A]CG[G]CC[C])",
-      sam
+      sam,
+      perl = TRUE
     )
   )
 }
@@ -87,7 +95,8 @@ count_c <- function(sam) {
   length(
     grep(
       r"(CTGCAGC[G]AG[T]GGG[C]ATCGT[T]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGCCCTGGCAGGTGAGCCTGAGAGTCC[A]CG[G]CC[C])",
-      sam
+      sam,
+      perl = TRUE
     )
   )
 }
@@ -96,17 +105,18 @@ count_d <- function(sam) {
   length(
     grep(
       r"(CTGCAGC[G]AG[T]GGG[C]ATCGT[T]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGCCCTGGCAGGTGAGCCTGAGAGTCC[G]CG[A]CC[G])",
-      sam
+      sam,
+      perl = TRUE
     )
   )
 }
 
 count_e <- function(sam) {
-  length(grep(r"(CTCAGAGACCTTCCCCCCGGGGATGCCGT)", sam))
+  length(grep(r"(CTCAGAGACCTTCCCCCCGGGGATGCCGT)", sam, perl = TRUE))
 }
 
 count_f <- function(sam) {
-  length(grep(r"(CTCAGAGACCTTCCCCCCCGGGGATGCCG)", sam))
+  length(grep(r"(CTCAGAGACCTTCCCCCCCGGGGATGCCG)", sam, perl = TRUE))
 }
 
 count_g <- function(sam) {
@@ -124,7 +134,7 @@ count_g <- function(sam) {
     "TACAGGCGGGCGTGGTCAGCTGGGACGAGG"
   )
 
-  sum(vapply(r1, function(x) length(grep(x, sam)), integer(1)))
+  sum(vapply(r1, function(x) find_pat(x, sam), integer(1)))
 }
 
 count_h <- function(sam) {
@@ -142,7 +152,7 @@ count_h <- function(sam) {
     "TGCAGGCGGGCGTGGTCAGCTGGGGCGAGG"
   )
 
-  sum(vapply(r2, function(x) length(grep(x, sam)), integer(1)))
+  sum(vapply(r2, function(x) length(grep(x, sam, fixed = TRUE)), integer(1)))
 }
 
 count_i <- function(sam) {
@@ -160,5 +170,15 @@ count_i <- function(sam) {
     "TGCAGGCGGGCGTGGTCAGCTGGGAGGAGA"
   )
 
-  sum(vapply(r3, function(x) length(grep(x, sam)), integer(1)))
+  sum(vapply(r3, function(x) find_pat(x, sam), integer(1)))
+}
+
+find_pat <- function(pat, str) {
+  length(
+    if (grepl("[", pat, fixed = TRUE)) {
+      grep(pat, str, perl = TRUE, fixed = FALSE)
+    } else {
+      grep(pat, str, fixed = TRUE)
+    }
+  )
 }
