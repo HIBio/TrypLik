@@ -3,7 +3,7 @@ pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   TrypLik: TrypLik.html
-last_built: 2024-05-02T00:46Z
+last_built: 2024-07-01T06:33Z
 urls:
   reference: https://hibio.github.io/TrypLik/reference
   article: https://hibio.github.io/TrypLik/articles

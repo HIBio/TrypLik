@@ -74,7 +74,7 @@ Carroll</h4>
 Biosciences<br><a class="author_email" href="mailto:#"></a><a href="mailto:jonathan@hibio.com" class="email">jonathan@hibio.com</a>
       </address>
                   
-            <h4 data-toc-skip class="date">2 May 2024</h4>
+            <h4 data-toc-skip class="date">1 July 2024</h4>
       
       
       <div class="d-none name"><code>TrypLik.Rmd</code></div>
@@ -363,8 +363,9 @@ single vector of values or individual arguments</p>
 <span><span class="co">#&gt; 1           2          2             0              0.99890</span></span>
 <span><span class="co">#&gt; 2           2          3             0              0.00008</span></span>
 <span><span class="co">#&gt; 3           3          2             0              0.00082</span></span>
-<span><span class="co">#&gt; 4           3          3             0              0.00020</span></span>
-<span></span>
+<span><span class="co">#&gt; 4           3          3             0              0.00020</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># or TrypLik(26, 0, 347, 316, 304, pop = 0)</span></span></code></pre></div>
 </div>
 </div>
@@ -612,7 +613,7 @@ structural variants and/or polymorphisms</p></li>
 </ol>
 <p>We use empirical data from the EUR populations from the 1000 Genomes
 Project to estimate these correction factors. First, we plotted <span class="math inline">\(2A/D\)</span> vs. <span class="math inline">\(2B/D\)</span> for these <span class="math inline">\(503\)</span> samples:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">genomes</span> <span class="op">&lt;-</span> <span class="fu">TrypLik</span><span class="fu">::</span><span class="fu"><a href="../reference/tryptase_1KG.html">tryptase_1KG</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -624,7 +625,7 @@ Project to estimate these correction factors. First, we plotted <span class="mat
 <p><img src="TrypLik_files/figure-html/genomes-1.png" width="700"></p>
 <p>The source for this data is available to an R session with
 <code><a href="../reference/tryptase_1KG.html">tryptase_1KG()</a></code></p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/tryptase_1KG.html">tryptase_1KG</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   2A/D   2B/D Geno Group</span></span>
 <span><span class="co">#&gt; 1    0 2.9885      0α:4β</span></span>
@@ -632,8 +633,9 @@ Project to estimate these correction factors. First, we plotted <span class="mat
 <span><span class="co">#&gt; 3    0 3.4384      0α:4β</span></span>
 <span><span class="co">#&gt; 4    0 3.4791      0α:4β</span></span>
 <span><span class="co">#&gt; 5    0 3.4792      0α:4β</span></span>
-<span><span class="co">#&gt; 6    0 3.5294      0α:4β</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="fu"><a href="../reference/tryptase_1KG.html">tryptase_1KG</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 6    0 3.5294      0α:4β</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="fu"><a href="../reference/tryptase_1KG.html">tryptase_1KG</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       2A/D   2B/D      Geno Group</span></span>
 <span><span class="co">#&gt; 498 3.3934 2.1381 everything else</span></span>
 <span><span class="co">#&gt; 499 3.5198 2.6565 everything else</span></span>
@@ -1813,7 +1815,7 @@ CCCT<mark class="bgx">G</mark>CTGTC CAAAACACCA CTGCTTCCTA</span>
 <p>We hope that <em><a href="https://bioconductor.org/packages/3.19/TrypLik" class="external-link">TrypLik</a></em>
 will be useful for your research. Please use the following information
 to cite the package and the overall approach. Thank you!</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Citation info</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"TrypLik"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; To cite package 'TrypLik' in publications use:</span></span>
@@ -1869,7 +1871,7 @@ McLean, 2017.</p>
 <p>
 <a id="bib-allaire2024rmarkdown"></a><a href="#cite-allaire2024rmarkdown">[1]</a><cite>
 J. Allaire, Y. Xie, C. Dervieux, et al. <em>rmarkdown: Dynamic Documents
-for R</em>. R package version 2.26. 2024. URL:
+for R</em>. R package version 2.27. 2024. URL:
 <a href="https://github.com/rstudio/rmarkdown" class="external-link">https://github.com/rstudio/rmarkdown</a>.</cite>
 </p>
 <p>
@@ -1930,8 +1932,10 @@ References in R”. In: <em>The Journal of Open Source Software</em>
 <p>
 <a id="bib-ole2024biocstyle"></a><a href="#cite-ole2024biocstyle">[10]</a><cite>
 A. Oleś. <em>BiocStyle: Standard styles for vignettes and other
-Bioconductor documents</em>. R package version 2.32.0. 2024. URL:
-<a href="https://github.com/Bioconductor/BiocStyle" class="external-link">https://github.com/Bioconductor/BiocStyle</a>.</cite>
+Bioconductor documents</em>. R package version 2.32.1. 2024. DOI:
+<a href="https://doi.org/10.18129/B9.bioc.BiocStyle" class="external-link">10.18129/B9.bioc.BiocStyle</a>.
+URL:
+<a href="https://bioconductor.org/packages/BiocStyle" class="external-link">https://bioconductor.org/packages/BiocStyle</a>.</cite>
 </p>
 <p>
 <a id="bib-2024language"></a><a href="#cite-2024language">[11]</a><cite>
@@ -1943,16 +1947,16 @@ Computing</em>. R Foundation for Statistical Computing. Vienna, Austria,
 <p>
 <a id="bib-xie2024knitr"></a><a href="#cite-xie2024knitr">[12]</a><cite>
 Y. Xie. <em>knitr: A General-Purpose Package for Dynamic Report
-Generation in R</em>. R package version 1.46. 2024. URL:
+Generation in R</em>. R package version 1.47. 2024. URL:
 <a href="https://yihui.org/knitr/" class="external-link">https://yihui.org/knitr/</a>.</cite>
 </p>
 </div>
 <div class="section level2">
 <h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.4.0 (2024-04-24)</span></span>
+<span><span class="co">#&gt; R version 4.4.1 (2024-06-14)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
 <span><span class="co">#&gt; Running under: Ubuntu 22.04.4 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1973,28 +1977,28 @@ Generation in R</em>. R package version 1.46. 2024. URL:
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt; [1] ggplot2_3.5.1    TrypLik_0.1.0    RefManageR_1.4.0 BiocStyle_2.32.0</span></span>
+<span><span class="co">#&gt; [1] ggplot2_3.5.1    TrypLik_0.1.0    RefManageR_1.4.0 BiocStyle_2.32.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;  [1] sass_0.4.9          utf8_1.2.4          generics_0.1.3     </span></span>
-<span><span class="co">#&gt;  [4] xml2_1.3.6          stringi_1.8.3       digest_0.6.35      </span></span>
-<span><span class="co">#&gt;  [7] magrittr_2.0.3      evaluate_0.23       grid_4.4.0         </span></span>
-<span><span class="co">#&gt; [10] timechange_0.3.0    bookdown_0.39       fastmap_1.1.1      </span></span>
-<span><span class="co">#&gt; [13] plyr_1.8.9          jsonlite_1.8.8      backports_1.4.1    </span></span>
-<span><span class="co">#&gt; [16] BiocManager_1.30.22 httr_1.4.7          purrr_1.0.2        </span></span>
+<span><span class="co">#&gt;  [4] xml2_1.3.6          stringi_1.8.4       digest_0.6.36      </span></span>
+<span><span class="co">#&gt;  [7] magrittr_2.0.3      evaluate_0.24.0     grid_4.4.1         </span></span>
+<span><span class="co">#&gt; [10] timechange_0.3.0    bookdown_0.39       fastmap_1.2.0      </span></span>
+<span><span class="co">#&gt; [13] plyr_1.8.9          jsonlite_1.8.8      backports_1.5.0    </span></span>
+<span><span class="co">#&gt; [16] BiocManager_1.30.23 httr_1.4.7          purrr_1.0.2        </span></span>
 <span><span class="co">#&gt; [19] fansi_1.0.6         scales_1.3.0        bibtex_0.5.1       </span></span>
-<span><span class="co">#&gt; [22] textshaping_0.3.7   jquerylib_0.1.4     cli_3.6.2          </span></span>
-<span><span class="co">#&gt; [25] rlang_1.1.3         munsell_0.5.1       withr_3.0.0        </span></span>
-<span><span class="co">#&gt; [28] cachem_1.0.8        yaml_2.3.8          tools_4.4.0        </span></span>
+<span><span class="co">#&gt; [22] textshaping_0.4.0   jquerylib_0.1.4     cli_3.6.3          </span></span>
+<span><span class="co">#&gt; [25] rlang_1.1.4         munsell_0.5.1       withr_3.0.0        </span></span>
+<span><span class="co">#&gt; [28] cachem_1.1.0        yaml_2.3.8          tools_4.4.1        </span></span>
 <span><span class="co">#&gt; [31] memoise_2.0.1       colorspace_2.1-0    vctrs_0.6.5        </span></span>
 <span><span class="co">#&gt; [34] R6_2.5.1            lifecycle_1.0.4     lubridate_1.9.3    </span></span>
-<span><span class="co">#&gt; [37] stringr_1.5.1       fs_1.6.4            ragg_1.3.0         </span></span>
+<span><span class="co">#&gt; [37] stringr_1.5.1       fs_1.6.4            ragg_1.3.2         </span></span>
 <span><span class="co">#&gt; [40] pkgconfig_2.0.3     desc_1.4.3          pkgdown_2.0.9      </span></span>
 <span><span class="co">#&gt; [43] pillar_1.9.0        bslib_0.7.0         gtable_0.3.5       </span></span>
-<span><span class="co">#&gt; [46] glue_1.7.0          Rcpp_1.0.12         systemfonts_1.0.6  </span></span>
-<span><span class="co">#&gt; [49] highr_0.10          xfun_0.43           tibble_3.2.1       </span></span>
-<span><span class="co">#&gt; [52] knitr_1.46          farver_2.1.1        htmltools_0.5.8.1  </span></span>
-<span><span class="co">#&gt; [55] rmarkdown_2.26      labeling_0.4.3      compiler_4.4.0</span></span></code></pre></div>
+<span><span class="co">#&gt; [46] glue_1.7.0          Rcpp_1.0.12         systemfonts_1.1.0  </span></span>
+<span><span class="co">#&gt; [49] highr_0.11          xfun_0.45           tibble_3.2.1       </span></span>
+<span><span class="co">#&gt; [52] knitr_1.47          farver_2.1.2        htmltools_0.5.8.1  </span></span>
+<span><span class="co">#&gt; [55] rmarkdown_2.27      labeling_0.4.3      compiler_4.4.1</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
