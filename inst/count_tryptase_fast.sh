@@ -25,61 +25,70 @@ temp1h="$outdir/$basename.temp1h"
 temp1i="$outdir/$basename.temp1i"
 temp2="$outdir/$basename.temp2"
 
-outfile="$outdir/${basename/.sam/.counts}"
+outfile="$outdir/${basename/.sam/.counts.txt}"
 
-$rg -c --include-zero 'CTGCAGC[A]AG[C]GGG[T]ATCGT[C]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGCCCTGGCAGGTGAGCCTGAGAGTCC[G]CG[A]CC[G]' $infile > $temp1a
-$rg -c --include-zero 'CTGCAGC[G]AG[T]GGG[C]ATCGT[C]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGCCCTGGCAGGTGAGCCTGAGAGTCC[A]CG[G]CC[C]' $infile > $temp1b
-$rg -c --include-zero 'CTGCAGC[G]AG[T]GGG[C]ATCGT[T]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGCCCTGGCAGGTGAGCCTGAGAGTCC[A]CG[G]CC[C]' $infile > $temp1c
-$rg -c --include-zero 'CTGCAGC[G]AG[T]GGG[C]ATCGT[T]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGCCCTGGCAGGTGAGCCTGAGAGTCC[G]CG[A]CC[G]' $infile > $temp1d
+## rg added --include-zero in v12 but DNANexus uses v11.0.2 so as a
+## workaround, use rg -c pattern file since no matches
+## returns an exit code of 1
 
-$rg -c --include-zero -F 'CCAGTCCAGGCCCTGCAGCAAGCGGGTATC' $infile > $temp1
-$rg -c --include-zero 'C[AG]GGGCCTGGAGGGGTGGGCAAGGGCTGGA' $infile >> $temp1
-$rg -c --include-zero -F 'GACGTCAAGGATCTGGCCACCCTCAGGGTG' $infile >> $temp1
-$rg -c --include-zero -F 'AGTTCTACATCATCCAGACTGGAGCGGATA' $infile >> $temp1
-$rg -c --include-zero -F 'CCGCGTCCACACGGTCATGCTGCCCCCTGC' $infile >> $temp1
-$rg -c --include-zero -F 'TGGGGACAGTGGGAGGTGGGGCCAGGGTCT' $infile >> $temp1
-$rg -c --include-zero -F 'TTGCCCGGCCCCCTCCTCAGGCTGCACCCT' $infile >> $temp1
-$rg -c --include-zero 'TGCAGAGCCCCTC[CT]CACCGCCATTTCCCCT' $infile >> $temp1
-$rg -c --include-zero -F 'GGAGACGACGTCCGCATCATCCGTGACGAC' $infile >> $temp1
-$rg -c --include-zero -F 'CCAGGGCGACTCTGGAGGGCCCCTGGTGTG' $infile >> $temp1
-$rg -c --include-zero -F 'TACAGGCGGGCGTGGTCAGCTGGGACGAGG' $infile >> $temp1
-paste -sd+ $temp1 | bc > $temp1g
+{ $rg -c 'CTGCAGC[A]AG[C]GGG[T]ATCGT[C]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGCCCTGGCAGGTGAGCCTGAGAGTCC[G]CG[A]CC[G]' $infile || echo 0; } > $temp1a
+{ $rg -c 'CTGCAGC[G]AG[T]GGG[C]ATCGT[C]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGCCCTGGCAGGTGAGCCTGAGAGTCC[A]CG[G]CC[C]' $infile || echo 0; } > $temp1b
+{ $rg -c 'CTGCAGC[G]AG[T]GGG[C]ATCGT[T]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGCCCTGGCAGGTGAGCCTGAGAGTCC[A]CG[G]CC[C]' $infile || echo 0; } > $temp1c
+{ $rg -c 'CTGCAGC[G]AG[T]GGG[C]ATCGT[T]GGGGGTCAGGAGGCCCCCAGGAGCAAGTGGCCCTGGCAGGTGAGCCTGAGAGTCC[G]CG[A]CC[G]' $infile || echo 0; } > $temp1d
+
+echo 0 > $temp1
+$rg -c -F 'CCAGTCCAGGCCCTGCAGCAAGCGGGTATC' $infile >> $temp1
+$rg -c 'C[AG]GGGCCTGGAGGGGTGGGCAAGGGCTGGA' $infile >> $temp1
+$rg -c -F 'GACGTCAAGGATCTGGCCACCCTCAGGGTG' $infile >> $temp1
+$rg -c -F 'AGTTCTACATCATCCAGACTGGAGCGGATA' $infile >> $temp1
+$rg -c -F 'CCGCGTCCACACGGTCATGCTGCCCCCTGC' $infile >> $temp1
+$rg -c -F 'TGGGGACAGTGGGAGGTGGGGCCAGGGTCT' $infile >> $temp1
+$rg -c -F 'TTGCCCGGCCCCCTCCTCAGGCTGCACCCT' $infile >> $temp1
+$rg -c 'TGCAGAGCCCCTC[CT]CACCGCCATTTCCCCT' $infile >> $temp1
+$rg -c -F 'GGAGACGACGTCCGCATCATCCGTGACGAC' $infile >> $temp1
+$rg -c -F 'CCAGGGCGACTCTGGAGGGCCCCTGGTGTG' $infile >> $temp1
+$rg -c -F 'TACAGGCGGGCGTGGTCAGCTGGGACGAGG' $infile >> $temp1
+paste -sd+ "$temp1" | bc > $temp1g
 # awk '{ sum += $1 } END { print sum }' temp1 > temp1g
 
-$rg -c --include-zero -F 'CCAGGCCAGGCCCTGCAGCGAGTGGGCATC' $infile > $temp2
-$rg -c --include-zero -F 'CGGGGCCTGGAGGGGTGGGGAAGGGCTGGA' $infile >> $temp2
-$rg -c --include-zero -F 'GACGTCAAGGATCTGGCCGCCCTCAGGGTG' $infile >> $temp2
-$rg -c --include-zero -F 'AGTTCTACACCGCCCAGATCGGAGCGGACA' $infile >> $temp2
-$rg -c --include-zero -F 'CCACGTCCACACGGTCACCCTGCCCCCTGC' $infile >> $temp2
-$rg -c --include-zero -F 'TGGGGACAGTGGAGGTGGGGCCAGGGTCTT' $infile >> $temp2
-$rg -c --include-zero -F 'TTGCCCGGCCCCCTCCTGAGGCTGCACCCT' $infile >> $temp2
-$rg -c --include-zero -F 'TGCAGAGCGCCTCCCACCGCCATTTCCTCT' $infile >> $temp2
-$rg -c --include-zero -F 'GGAGACGACGTCCGCATCGTCCGTGACGAC' $infile >> $temp2
-$rg -c --include-zero -F 'CCAGGGCGACTCCGGAGGGCCCCTGGTGTG' $infile >> $temp2
-$rg -c --include-zero -F 'TGCAGGCGGGCGTGGTCAGCTGGGGCGAGG' $infile >> $temp2
-paste -sd+ $temp2 | bc > $temp1h
+echo 0 > $temp2
+$rg -c -F 'CCAGGCCAGGCCCTGCAGCGAGTGGGCATC' $infile >> $temp2
+$rg -c -F 'CGGGGCCTGGAGGGGTGGGGAAGGGCTGGA' $infile >> $temp2
+$rg -c -F 'GACGTCAAGGATCTGGCCGCCCTCAGGGTG' $infile >> $temp2
+$rg -c -F 'AGTTCTACACCGCCCAGATCGGAGCGGACA' $infile >> $temp2
+$rg -c -F 'CCACGTCCACACGGTCACCCTGCCCCCTGC' $infile >> $temp2
+$rg -c -F 'TGGGGACAGTGGAGGTGGGGCCAGGGTCTT' $infile >> $temp2
+$rg -c -F 'TTGCCCGGCCCCCTCCTGAGGCTGCACCCT' $infile >> $temp2
+$rg -c -F 'TGCAGAGCGCCTCCCACCGCCATTTCCTCT' $infile >> $temp2
+$rg -c -F 'GGAGACGACGTCCGCATCGTCCGTGACGAC' $infile >> $temp2
+$rg -c -F 'CCAGGGCGACTCCGGAGGGCCCCTGGTGTG' $infile >> $temp2
+$rg -c -F 'TGCAGGCGGGCGTGGTCAGCTGGGGCGAGG' $infile >> $temp2
+paste -sd+ "$temp2" | bc > $temp1h
 # awk '{ sum += $1 } END { print sum }' temp2 > temp1h
 
-$rg -c --include-zero -F 'CTCAGAGACCTTCCCCCCGGGGATGCCGT' $infile > $temp1e
-$rg -c --include-zero -F 'CTCAGAGACCTTCCCCCCCGGGGATGCCG' $infile > $temp1f
+{ $rg -c -F 'CTCAGAGACCTTCCCCCCGGGGATGCCGT' $infile || echo 0; } > $temp1e
+{ $rg -c -F 'CTCAGAGACCTTCCCCCCCGGGGATGCCG' $infile || echo 0; } > $temp1f
 
-$rg -c --include-zero -F 'CCAGGCCAGGCCCTGCAGCAAACGGGCATT' $infile  > $temp1
-$rg -c --include-zero -F 'TGGGGCCTGGAGGGGTGGGCAAGGGCTGGA' $infile  >> $temp1
-$rg -c --include-zero -F 'GACATCAAGGATCTGGCCGCCCTCAGGGTG' $infile  >> $temp1
-$rg -c --include-zero -F 'AGTTCTACATCATCCAGACCGGGGCGGACA' $infile  >> $temp1
-$rg -c --include-zero 'CCACATCCACAC[GC]GTCACGCTGCCCCCTGC' $infile >> $temp1
-$rg -c --include-zero -F 'GGGGACAGCGGGAGGCCGGGCCAGGTGGGC' $infile  >> $temp1
-$rg -c --include-zero -F 'CCCAGCCGGCCCCAGACCCGGCTCCACGCC' $infile  >> $temp1
-$rg -c --include-zero -F 'CCCAGTGCACCTGCCGCCGCCATACCCGCT' $infile  >> $temp1
-$rg -c --include-zero -F 'GGCCACAGCTTTCAAATCGTCCGCGATGAC' $infile  >> $temp1
-$rg -c --include-zero -F 'CCAGGGTGACTCTGGAGGGCCCCTGGTCTG' $infile  >> $temp1
-$rg -c --include-zero -F 'TGCAGGCGGGCGTGGTCAGCTGGGAGGAGA' $infile  >> $temp1
-paste -sd+ $temp1 | bc > $temp1i
+echo 0 > $temp1
+$rg -c -F 'CCAGGCCAGGCCCTGCAGCAAACGGGCATT' $infile >> $temp1
+$rg -c -F 'TGGGGCCTGGAGGGGTGGGCAAGGGCTGGA' $infile >> $temp1
+$rg -c -F 'GACATCAAGGATCTGGCCGCCCTCAGGGTG' $infile >> $temp1
+$rg -c -F 'AGTTCTACATCATCCAGACCGGGGCGGACA' $infile >> $temp1
+$rg -c 'CCACATCCACAC[GC]GTCACGCTGCCCCCTGC' $infile >> $temp1
+$rg -c -F 'GGGGACAGCGGGAGGCCGGGCCAGGTGGGC' $infile >> $temp1
+$rg -c -F 'CCCAGCCGGCCCCAGACCCGGCTCCACGCC' $infile >> $temp1
+$rg -c -F 'CCCAGTGCACCTGCCGCCGCCATACCCGCT' $infile >> $temp1
+$rg -c -F 'GGCCACAGCTTTCAAATCGTCCGCGATGAC' $infile >> $temp1
+$rg -c -F 'CCAGGGTGACTCTGGAGGGCCCCTGGTCTG' $infile >> $temp1
+$rg -c -F 'TGCAGGCGGGCGTGGTCAGCTGGGAGGAGA' $infile >> $temp1
+paste -sd+ "$temp1" | bc > $temp1i
 # awk '{ sum += $1 } END { print sum }' temp1 > temp1i
 
 # use `paste -s -` on mac
+echo "Generating output for $basename"
 cat $outdir/$basename.temp1[abcdefghi] | paste -s - > $outfile
 cat $outfile
 rm $outdir/$basename.temp[12]*
+rm $infile
 
 exit 0

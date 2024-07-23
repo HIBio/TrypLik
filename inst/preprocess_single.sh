@@ -1,28 +1,29 @@
 #!/bin/bash
 
-set -e -u -o pipefail
+# set -e -u -o pipefail
 
 nthreads=${4-8}
 
 SAMTOOLS=$(which samtools)
-BWA=$(which bwa)
+BWA="/home/dnanexus/out/out/bwa/bwa"
 
-echo "Using $SAMTOOLS and $BWA"
+echo "Using samtools: $SAMTOOLS"
+echo "Using bwa: $BWA"
 
 ## output dir
 outdir="${2-.}"
 echo "Using $outdir as output dir"
 
 consensusdir="${3-.}"
+echo "consensusdir is $consensusdir"
 
-if [[ -f "$consensusdir/consensus.amb" ]]; then
-  echo "consensus file already indexed"
-else
-  echo "Processing consensus..."
-  $BWA index $consensusdir/consensus.fa
-fi
+# if [[ -f "$consensusdir/consensus.fa.amb" ]]; then
+#   echo "consensus file already indexed"
+# else
+#   echo "Processing consensus..."
+#   $BWA index $consensusdir/consensus.fa
+# fi
 
-echo "index"
 ## index assumed to be in the same dir as .cram
 if [[ -f "$1.crai" ]]; then
   echo ".crai index file already exists."
@@ -42,7 +43,6 @@ fixmate="$outdir/$basename.fixmate.sam"
 possort="$outdir/$basename.positionsort.sam"
 output="$outdir/${basename/.cram/.sam}"
 
-echo "view"
 # not indexing $filtered as it takes time
 $SAMTOOLS view -u --fast -b -h "$1" chr16:1200000-1300000 > $filtered
 $SAMTOOLS sort -u -@$nthreads -m1G -n $filtered -o $sorted
@@ -52,6 +52,7 @@ $SAMTOOLS sort -u -@$nthreads -m1G -n $out -o $outsorted
 $SAMTOOLS fixmate -m $outsorted $fixmate
 $SAMTOOLS sort -u -@$nthreads -m1G -o $possort $fixmate
 $SAMTOOLS markdup -r $possort $output
+echo "Done with samtools for $1"
 
 ## clean up temporary files:
 echo "Cleanup"
