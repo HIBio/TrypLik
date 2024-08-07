@@ -75,7 +75,7 @@ echo "reldir: $reldir"
 cd "$indir"
 
 ## WHICH DIRS TO PROCESS - START WITH JUST ONE
-dirs="10/"
+dirs="${5-10}/"
 #dirs=$(ls -d */)
 
 task() { # $1 = idWorker, $2 = asset
@@ -90,7 +90,7 @@ task() { # $1 = idWorker, $2 = asset
 worker() { # $1 = idWorker
   echo "Worker $1 GO!"
   idAsset=0
-  for asset in "${listAssets[@]:0:5}"; do # ONLY RUN THE FIRST TEN FILES!
+  for asset in "${listAssets[@]}"; do # ONLY RUN THE FIRST TEN FILES? USE [@]:0:10
     # split assets among workers (using modulo); each worker will go through
     # the list and select the asset only if it belongs to that worker
     (( idAsset % nWorkers == $1 )) && task $1 "$asset"
@@ -124,6 +124,15 @@ echo "Cleaning up bwa"
 cd
 rm -fr $bwadir
 rm -fr $outdir/bwa
+
+echo "*** Aggregating data ***"
+cd
+cd "$reldir/$outdir/$dirs"
+for i in *counts.txt ; do echo $i; cat $i; done > "../results_${dirs/\//}.txt"
+# tar -czvf "results_${dirs/\//}.tar.gz" *.txt
+rm -f *.counts.txt
+cd ..
+rm -fr $dirs
 
 echo "*** ALL DONE ***"
 
